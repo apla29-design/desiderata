@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desiderata - INS Jaume Mimó</title>
+    <!-- Tailwind CSS per a un disseny impecable, net i corporatiu -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans per a una tipografia elegant -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icones de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        /* Efecte "globus/bombolla" premium per a les targetes */
+        .globus-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        
+        .globus-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Ambient Glows per crear l'efecte de fons del Jaume Mimó */
+        .glow-bg-1 {
+            filter: blur(140px);
+            opacity: 0.15;
+            background: radial-gradient(circle, #4f46e5 0%, #1e1b4b 100%);
+        }
+        .glow-bg-2 {
+            filter: blur(140px);
+            opacity: 0.12;
+            background: radial-gradient(circle, #10b981 0%, #064e3b 100%);
+        }
+        
+        /* Personalització del scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 relative overflow-x-hidden pb-16">
+
+    <!-- Fons decoratius de tipus "globus" de llum -->
+    <div class="absolute top-10 left-10 w-96 h-96 rounded-full glow-bg-1 -z-10 pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[500px] h-[500px] rounded-full glow-bg-2 -z-10 pointer-events-none"></div>
+
+    <!-- Capçalera Principal -->
+    <header class="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="h-11 w-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 flex-shrink-0">
+                    <i class="fa-solid fa-rectangle-list text-xl"></i>
+                </div>
+                <div class="min-w-0">
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 truncate">Desiderata INS Jaume Mimó</h1>
+                </div>
+            </div>
+            
+            <!-- Controls d'Edició i Perfil -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <button onclick="handleEditModeClick()" id="edit-mode-toggle" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-xs transition-all">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                    </span>
+                    <span id="edit-toggle-text">Mode Coordinació</span>
+                </button>
+                
+                <div onclick="openIdentityModal()" class="flex items-center gap-2.5 pl-3 border-l border-slate-200 cursor-pointer hover:opacity-85 transition-opacity" title="Canvia d'usuari docent">
+                    <div class="text-right hidden md:block">
+                        <p id="user-display-name" class="text-xs font-bold text-slate-800">Docent Convidat</p>
+                        <p id="user-display-spec" class="text-[10px] text-slate-400 font-bold">Identifica't fent clic</p>
+                    </div>
+                    <div id="user-display-initials" class="h-10 w-10 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-700 font-extrabold text-xs shadow-xs flex-shrink-0">
+                        DC
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        
+        <!-- Banner d'Estat: Mode Edició -->
+        <div id="admin-banner" class="hidden bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6 flex-col items-stretch gap-4 shadow-sm animate-fadeIn">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="p-2.5 bg-amber-500/10 rounded-xl text-amber-600">
+                        <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                    </span>
+                    <div>
+                        <h3 class="font-bold text-amber-950 text-sm">Panell de Coordinació Actiu (Protegit)</h3>
+                        <p class="text-xs text-amber-800/90 mt-0.5">Com a coordinador, pots afegir nous mòduls, duplicar elements, editar requisits, exportar tries o vincular-ho a un Google Sheets.</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                    <button onclick="exportToCSV()" class="px-3.5 py-2.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5" title="Descarrega un fitxer CSV per carregar-lo a Google Sheets o Excel">
+                        <i class="fa-solid fa-file-excel"></i> Exportar a Excel (CSV)
+                    </button>
+                    <button onclick="forceSyncDefaultDatabase()" class="px-3.5 py-2.5 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5" title="Sincronitza totes les matèries dels excels d'origen directament al núvol de Firestore">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Sincronitzar dades Excel
+                    </button>
+                    <button onclick="openAddModal()" class="px-3.5 py-2.5 text-xs font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Crear "Globus"
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Configuració de Google Webhook per al Drive del centre -->
+            <div class="bg-white/80 border border-amber-200/60 rounded-xl p-3 mt-1">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <i class="fa-brands fa-google-drive text-emerald-600 text-lg flex-shrink-0"></i>
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-bold text-slate-800">Enllaç directe a Google Drive (Google Sheets)</h4>
+                            <p class="text-[10px] text-slate-500 truncate">Vols que les respostes dels docents s'escriguin directament al teu de full de càlcul?</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full md:w-auto md:max-w-md flex-grow justify-end">
+                        <input type="text" id="sheets-webhook-url" onchange="saveSheetsWebhook()" placeholder="Enganxa la URL d'execució d'Apps Script del teu Drive..." class="w-full max-w-xs px-3 py-1.5 text-[11px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <button onclick="openSheetsGuide()" class="px-2.5 py-1.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 hover:bg-indigo-100 rounded-lg transition-colors whitespace-nowrap">
+                            <i class="fa-solid fa-circle-question"></i> Com es fa?
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canviador de codi d'accés de Coordinació de l'institut -->
+            <div class="bg-white/80 border border-amber-200/60 rounded-xl p-3 mt-1">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <i class="fa-solid fa-shield-halved text-amber-600 text-lg flex-shrink-0"></i>
+                        <div class="min-w-0">
+                            <h4 class="text-xs font-bold text-slate-800">Seguretat: Canviar la Clau del Mode Coordinador</h4>
+                            <p class="text-[10px] text-slate-500 truncate">Estableix una nova contrasenya d'accés per protegir el teu panell.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <input type="password" id="coor-passcode-change" placeholder="Nou codi de seguretat..." class="w-full max-w-xs px-3 py-1.5 text-[11px] bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <button onclick="changePasscode()" class="px-3 py-1.5 text-[10px] font-bold bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors whitespace-nowrap">
+                            Desar Codi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerta informativa de Desiderata -->
+        <div id="info-banner" class="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-5 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
+            <div class="flex items-start gap-3.5">
+                <span class="p-2.5 bg-indigo-600/10 rounded-xl text-indigo-600 mt-0.5 md:mt-0">
+                    <i class="fa-solid fa-circle-info text-lg"></i>
+                </span>
+                <div>
+                    <h3 class="font-bold text-indigo-950 text-base">Període d'elecció actiu (Curs 2026-2027)</h3>
+                    <p class="text-sm text-indigo-800/90 leading-relaxed mt-0.5">
+                        Si us plau, tria els "globus" de matèries i grups que t'interessaria impartir. La teva jornada és <b>18 hores setmanals</b> (a no ser que demanis reducció). Has de triar les Coordinacions també:
+                    </p>
+                </div>
+            </div>
+            <div class="text-xs font-semibold bg-indigo-600 text-white px-4 py-2 rounded-full shadow-xs whitespace-nowrap self-stretch md:self-auto text-center">
+                <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Connexió dinàmica activa
+            </div>
+        </div>
+
+        <!-- Filtre Dinàmic d'Estudis (Cicles) -->
+        <div class="mb-6">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">Filtra per Cicle Formatiu / Especialitat / Càrrec</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                <button onclick="setFilterStudy('all')" id="filter-study-all" class="filter-study-btn p-3 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between h-20 bg-indigo-600 text-white border-indigo-600 shadow-md">
+                    <i class="fa-solid fa-border-all text-sm mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">Tots els cicles</span>
+                </button>
+                <button onclick="setFilterStudy('ac')" id="filter-study-ac" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-basket-shopping text-sm text-indigo-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGM Activitats Comercials</span>
+                </button>
+                <button onclick="setFilterStudy('mp')" id="filter-study-mp" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-lightbulb text-sm text-amber-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGS Màrqueting i Publicitat</span>
+                </button>
+                <button onclick="setFilterStudy('ci')" id="filter-study-ci" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-globe text-sm text-sky-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGS Comerç Internacional</span>
+                </button>
+                <button onclick="setFilterStudy('tl')" id="filter-study-tl" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-truck-fast text-sm text-emerald-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGS Transport i Logística</span>
+                </button>
+                <button onclick="setFilterStudy('ga')" id="filter-study-ga" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-calculator text-sm text-cyan-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGM Gestió Administrativa</span>
+                </button>
+                <button onclick="setFilterStudy('af')" id="filter-study-af" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-chart-pie text-sm text-fuchsia-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">CFGS Administració i Finances</span>
+                </button>
+                <button onclick="setFilterStudy('coor')" id="filter-study-coor" class="filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20">
+                    <i class="fa-solid fa-briefcase text-sm text-rose-500 mb-1"></i>
+                    <span class="text-xs font-bold leading-tight">Coordinacions i Càrrecs</span>
+                </button>
+            </div>
+
+            <!-- Sub-filtre dinàmic específic per separar Coordinacions i Càrrecs -->
+            <div id="coor-subfilters" class="hidden mt-4 p-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl items-center flex-wrap gap-1.5 animate-fadeIn">
+                <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mr-2 ml-1">Tipus de Coordinació / Àrea</span>
+                <button onclick="setCoorSubFilter('all')" id="coor-sub-all" class="coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-indigo-600 text-white transition-colors shadow-xs">Totes</button>
+                <button onclick="setCoorSubFilter('com')" id="coor-sub-com" class="coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors">Només Comerç i Màrqueting</button>
+                <button onclick="setCoorSubFilter('adm')" id="coor-sub-adm" class="coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors">Només Administració i Finances</button>
+                <button onclick="setCoorSubFilter('gen')" id="coor-sub-gen" class="coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors">Generals / Centre</button>
+            </div>
+        </div>
+
+        <!-- Secció de Propostes Rebudes (Visibles en Mode Edició) -->
+        <div id="admin-proposals-section" class="hidden bg-white rounded-3xl border border-slate-200 shadow-xs p-6 mb-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-slate-100 mb-4">
+                <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-inbox text-indigo-600 text-lg"></i> 
+                    <span>Propostes enviades pel professorat (Temps Real)</span>
+                    <span id="proposal-count-badge" class="bg-indigo-100 text-indigo-700 text-xs font-extrabold px-3 py-1 rounded-full">0 propostes</span>
+                </h2>
+                
+                <!-- Selectors de tipus de visualització de propostes -->
+                <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl self-stretch sm:self-auto">
+                    <button onclick="setViewType('cards')" id="btn-view-cards" class="flex-1 sm:flex-initial px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white transition-all">
+                        <i class="fa-solid fa-grip mr-1"></i> Targetes
+                    </button>
+                    <button onclick="setViewType('table')" id="btn-view-table" class="flex-1 sm:flex-initial px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-800 transition-all">
+                        <i class="fa-solid fa-table-cells mr-1"></i> Taula (Excel)
+                    </button>
+                </div>
+            </div>
+
+            <!-- VISTA A: TARGETES (Per defecte) -->
+            <div id="proposals-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- S'omple des de Firestore/local -->
+            </div>
+
+            <!-- VISTA B: TAULA XLS (Oculta per defecte) -->
+            <div id="proposals-table-container" class="hidden flex-col gap-4 animate-fadeIn">
+                <div class="flex justify-between items-center bg-slate-50 p-3 rounded-2xl border border-slate-200/60">
+                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Graella global d'assignació d'hores de desiderata</span>
+                    <button onclick="copyTableToClipboard()" class="px-3 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center gap-1.5 transition-colors shadow-xs">
+                        <i class="fa-solid fa-copy"></i> Copiar Taula per a Excel/Sheets
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto border border-slate-200 rounded-2xl bg-white max-h-[450px]">
+                    <table class="w-full text-left text-xs border-collapse" id="xls-export-table">
+                        <thead class="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold sticky top-0 border-b border-slate-200">
+                            <tr>
+                                <th class="p-3.5 border-r border-slate-200">Cicle Formatiu / Estudi</th>
+                                <th class="p-3.5 border-r border-slate-200 text-center">Grup / Curs</th>
+                                <th class="p-3.5 border-r border-slate-200 text-center">Codi Mòdul</th>
+                                <th class="p-3.5 border-r border-slate-200">Nom de la Matèria o Càrrec</th>
+                                <th class="p-3.5 border-r border-slate-200 text-center">Hores</th>
+                                <th class="p-3.5 border-r border-slate-200">Docents que la demanen</th>
+                                <th class="p-3.5 text-center">Docent Assignat Oficial (Edita)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="xls-table-body" class="divide-y divide-slate-100 text-slate-700">
+                            <!-- S'omple dinàmicament compilellant les tries -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graella de continguts -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- BLOC ESQUERRA: Filtres de curs / hores i llistat de globus -->
+            <div class="lg:col-span-8 flex flex-col gap-5">
+                
+                <!-- Barra d'Eines i Filtres d'Hores / Curs -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col gap-4">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <!-- Cercador de text -->
+                        <div class="relative w-full md:w-72">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </span>
+                            <input type="text" id="search-input" oninput="filterDatabase()" placeholder="Cerca per mòdul, nom o docent..." class="w-full pl-9 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors">
+                        </div>
+                        
+                        <!-- Selectors de curs (1r / 2n) -->
+                        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl w-full md:w-auto overflow-x-auto">
+                            <button onclick="setFilterCourse('all')" id="filter-course-all" class="filter-course-btn px-4 py-2 text-[11px] font-bold rounded-lg bg-indigo-600 text-white transition-all whitespace-nowrap">Tots els cursos</button>
+                            <button onclick="setFilterCourse('1')" id="filter-course-1" class="filter-course-btn px-4 py-2 text-[11px] font-bold rounded-lg text-slate-600 hover:text-slate-800 transition-all whitespace-nowrap">1r Curs</button>
+                            <button onclick="setFilterCourse('2')" id="filter-course-2" class="filter-course-btn px-4 py-2 text-[11px] font-bold rounded-lg text-slate-600 hover:text-slate-800 transition-all whitespace-nowrap">2n Curs</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtre ràpid de volum d'hores -->
+                    <div class="flex items-center gap-1.5 justify-start overflow-x-auto pb-1 md:pb-0 border-t border-slate-100 pt-3">
+                        <button onclick="setFilterHours('all')" id="filter-hours-all" class="filter-hours-btn px-3.5 py-2 text-[10px] font-bold rounded-xl bg-indigo-600 text-white transition-colors whitespace-nowrap">Totes les hores</button>
+                        <button onclick="setFilterHours('short')" id="filter-hours-short" class="filter-hours-btn px-3.5 py-2 text-[10px] font-bold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors whitespace-nowrap">Hores curtes (≤ 3h)</button>
+                        <button onclick="setFilterHours('long')" id="filter-hours-long" class="filter-hours-btn px-3.5 py-2 text-[10px] font-bold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors whitespace-nowrap">Hores completes (≥ 4h)</button>
+                        <span class="h-6 w-px bg-slate-200 mx-1"></span>
+                        <button onclick="setFilterStatus('all')" id="filter-status-all" class="filter-status-btn px-3.5 py-2 text-[10px] font-bold rounded-xl bg-slate-900 text-white transition-colors whitespace-nowrap">Tots els estats</button>
+                        <button onclick="setFilterStatus('available')" id="filter-status-available" class="filter-status-btn px-3.5 py-2 text-[10px] font-bold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors whitespace-nowrap">Lliures / Disponibles</button>
+                    </div>
+                </div>
+
+                <!-- Llistat de Globus de matèries -->
+                <div id="materies-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- S'omple dinàmicament -->
+                </div>
+            </div>
+
+            <!-- BLOC DRET: Panell lateral de tria d'hores acumulades -->
+            <div class="lg:col-span-4 sticky top-24">
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-xs p-5">
+                    <h2 class="text-base font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100 flex items-center justify-between">
+                        <span>La teva Tria</span>
+                        <div class="flex items-center gap-2">
+                            <!-- Botó bonic de neteja ràpida per al professorat -->
+                            <button onclick="clearTria()" class="text-[10px] font-bold text-slate-400 hover:text-rose-600 transition-colors" title="Netejar tota la tria"><i class="fa-solid fa-trash-can mr-1"></i> Netejar</button>
+                            <span id="selected-count-badge" class="bg-indigo-100 text-indigo-700 text-xs font-extrabold px-2.5 py-1 rounded-full">0 mòduls</span>
+                        </div>
+                    </h2>
+
+                    <!-- Gràfic Visual del Comptador d'Hores acumulades -->
+                    <div class="mb-5 bg-slate-50/80 p-4 rounded-2xl border border-slate-100">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hores seleccionades</span>
+                            <span id="total-hours" class="text-lg font-extrabold text-indigo-600">0h <span class="text-xs text-slate-400 font-medium">/ 18h requerides</span></span>
+                        </div>
+                        
+                        <!-- Barra de progrés -->
+                        <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-2.5">
+                            <span id="hours-status-text" class="text-[10px] font-bold text-slate-400 leading-tight">No has seleccionat cap element encara.</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase">Jornada 18h</span>
+                        </div>
+                    </div>
+
+                    <!-- Llista de mòduls seleccionats dinàmics -->
+                    <div id="selected-list" class="space-y-2.5 mb-5 max-h-60 overflow-y-auto pr-1">
+                        <!-- Missatge buit per defecte -->
+                        <div id="empty-selection-msg" class="text-center py-6 px-4 border border-dashed border-slate-200 rounded-2xl text-slate-400 bg-slate-50/20">
+                            <i class="fa-regular fa-folder-open text-xl mb-1.5 text-slate-300 block"></i>
+                            <span class="text-xs font-bold text-slate-500">No has triat cap mòdul encara</span>
+                            <p class="text-[10px] text-slate-400 mt-1">Fes clic als botons dels globus de matèries per afegir mòduls a la teva proposta.</p>
+                        </div>
+                    </div>
+
+                    <!-- Botó de confirmació adaptat per permetre qualsevol enviament > 0h -->
+                    <button onclick="submitPreferences()" id="btn-submit" disabled class="w-full py-3.5 px-4 rounded-2xl font-bold text-xs bg-slate-200 text-slate-400 cursor-not-allowed transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-[10px]"></i> Envia la meva proposta
+                    </button>
+                    
+                    <p class="text-[9px] text-slate-400 text-center mt-3">La proposta s'enviarà automàticament al panell de coordinació del centre.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE PETICIÓ DE CODI D'ACCÉS (PROTECCIÓ EDIT) -->
+    <div id="passcode-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-[120] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 animate-fadeIn text-center">
+            <div class="h-12 w-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-lg mx-auto mb-3">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h3 class="text-base font-extrabold text-slate-950 mb-1">Accés Protegit</h3>
+            <p class="text-xs text-slate-500 leading-relaxed mb-4">Aquest apartat és exclusiu per a l'Equip de Coordinació de l'INS Jaume Mimó. Si us plau, introdueix el codi d'accés:</p>
+            
+            <div class="mb-4">
+                <input type="password" id="passcode-input" placeholder="Escriu el codi d'accés..." class="w-full text-center px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-sm font-semibold">
+                <p id="passcode-error" class="hidden text-[10px] text-rose-600 font-bold mt-1.5"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Codi d'accés incorrecte</p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="closePasscodeModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors">Cancel·lar</button>
+                <button onclick="submitPasscode()" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL D'EDICIÓ / CREACIÓ DE MATÈRIA -->
+    <div id="edit-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 id="modal-title" class="text-base font-extrabold text-slate-950">Afegir nova matèria / grup</h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <form id="subject-form" onsubmit="saveSubject(event)" class="space-y-4">
+                <input type="hidden" id="form-subject-id">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Codi Mòdul/Unitat</label>
+                        <input type="text" id="form-code" placeholder="Ex: 1110" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Hores Setmanals Totals</label>
+                        <input type="number" id="form-hours" min="1" max="50" placeholder="Ex: 4" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nom de la Matèria</label>
+                    <input type="text" id="form-name" placeholder="Ex: Atenció al client..." required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Cicle / Estudi</label>
+                        <select id="form-study-field" onchange="toggleFormDeptContainer()" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                            <option value="ac">CFGM Activitats Comercials</option>
+                            <option value="mp">CFGS Màrqueting i Publicitat</option>
+                            <option value="ci">CFGS Comerç Internacional</option>
+                            <option value="tl">CFGS Transport i Logística</option>
+                            <option value="ga">CFGM Gestió Administrativa</option>
+                            <option value="af">CFGS Administració i Finances</option>
+                            <option value="coor">Coordinacions i Càrrecs</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Curs (1r o 2n)</label>
+                        <select id="form-course-field" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                            <option value="1">1r Curs / Anual</option>
+                            <option value="2">2n Curs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Àrea de Coordinació (Només es mostra si es tria Coordinació) -->
+                <div id="form-dept-container" class="hidden">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Àrea / Departament d'adscripció</label>
+                    <select id="form-dept" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                        <option value="General">General / Centre (Sense departament específic)</option>
+                        <option value="Comerç">Comerç i Màrqueting</option>
+                        <option value="Administració">Administració i Finances</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Grup de classe</label>
+                        <input type="text" id="form-group" placeholder="Ex: 1r curs" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Detalls d'Horari / Desdoblaments</label>
+                        <input type="text" id="form-schedule" placeholder="Ex: 3h lectives + 1h desdoblament" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Perfil Requerit / Especialitat</label>
+                        <input type="text" id="form-specialty" placeholder="Ex: Org. i Gestió Comercial" required class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Docent Assignat (Si està ocupat)</label>
+                        <input type="text" id="form-teacher" placeholder="Buit si està disponible" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Punts forts / Requisits o Notes (Un per línia)</label>
+                    <textarea id="form-benefits" rows="3" placeholder="Nota 1&#10;Nota 2" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none"></textarea>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2">
+                    <button type="button" onclick="closeEditModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors">Cancel·lar</button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors">Desar Canvis</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL GUIA GOOGLE SHEETS / DRIVE -->
+    <div id="sheets-guide-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-lg w-full shadow-2xl border border-slate-100 overflow-y-auto max-h-[85vh]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="text-sm font-extrabold text-slate-950 flex items-center gap-2">
+                    <i class="fa-brands fa-google-drive text-emerald-600"></i> Integració i Codi per al teu Google Sheets
+                </h3>
+                <button onclick="closeSheetsGuide()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-3.5 text-xs text-slate-600 leading-relaxed">
+                <p class="font-bold text-slate-900">Enllaç al teu Full de Càlcul del Mimó:</p>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                    <a href="https://docs.google.com/spreadsheets/d/1vcQfmPjrgYDgyUV1_P79ryucJgvUHwzRNdegBJq_TUk/edit?usp=sharing" target="_blank" class="text-indigo-600 font-bold hover:underline break-all">
+                        <i class="fa-solid fa-up-right-from-square"></i> Obre el teu Google Sheet (1vcQfmPjrgYDgyUV1_P79ryucJgvUHwzRNdegBJq_TUk)
+                    </a>
+                </div>
+
+                <p class="font-bold text-slate-900 pt-1">Instruccions per automatitzar l'assignació directa a la Columna J i registre al Full IA:</p>
+                <ol class="list-decimal list-inside space-y-1.5 font-medium">
+                    <li>Dins del teu full, ves al menú superior: <b>Extensions > Apps Script</b>.</li>
+                    <li>Esborra tot el codi que hi hagi i enganxa aquest script de registre doble:</li>
+                </ol>
+                <pre class="bg-slate-900 text-slate-100 p-3 rounded-xl overflow-x-auto text-[10px] leading-normal select-all">
+function doGet(e) {
+  return ContentService.createTextOutput("Connexió correcta! El servidor d'integració de l'INS Jaume Mimó està actiu i escoltant peticions al núvol. No et preocupis, aquest missatge confirma que has fet la implementació a la perfecció. Ara ja pots enviar la teva tria des del selector de matèries de la web!")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getActiveSheet(); // Full principal de treball
+    var data = JSON.parse(e.postData.contents);
+    
+    var teacherName = data.teacherName;
+    var teacherSpec = data.teacherSpec;
+    var selectedCodes = data.selectedSubjectCodes || []; // Codis de matèria demanats
+    var selectedIds = data.selectedSubjectIds || [];     // IDs de matèria demanats
+    var selectedNames = data.selectedSubjectNames || []; // Noms de matèria demanats
+    
+    var lastRow = sheet.getLastRow();
+    var matchedIndices = []; // Desa quins mòduls de la tria s'han localitzat i assignat al full principal
+    
+    if (lastRow >= 2) {
+      var range = sheet.getRange(1, 1, lastRow, sheet.getLastColumn());
+      var values = range.getValues();
+      
+      // Escanegem cada fila del teu full per buscar coincidències amb el mòdul o càrrec
+      for (var i = 1; i < values.length; i++) {
+        var row = values[i];
+        var matchFoundIdx = -1;
+        
+        // Comprovem si alguna de les cel·les coincideix amb el codi, ID o Nom de la matèria triada
+        for (var colIdx = 0; colIdx < row.length; colIdx++) {
+          var cellValue = String(row[colIdx]).trim();
+          if (!cellValue) continue;
+          
+          for (var k = 0; k < selectedIds.length; k++) {
+            if (cellValue === selectedIds[k] || 
+                cellValue === selectedCodes[k] || 
+                cellValue === selectedNames[k]) {
+              matchFoundIdx = k;
+              break;
+            }
+          }
+          if (matchFoundIdx !== -1) break;
+        }
+        
+        // Si detecta coincidència, escriu el nom del docent directament a la Columna J (Columna 10)
+        if (matchFoundIdx !== -1) {
+          sheet.getRange(i + 1, 10).setValue(teacherName); 
+          if (matchedIndices.indexOf(matchFoundIdx) === -1) {
+            matchedIndices.push(matchFoundIdx);
+          }
+        }
+      }
+    }
+    
+    // Gestió del "Full IA" (actua com a registre de seguretat absolut per a l'ordre d'arribada)
+    var iaSheet = ss.getSheetByName("Full IA");
+    if (!iaSheet) {
+      iaSheet = ss.insertSheet("Full IA");
+      iaSheet.appendRow(["Num. Registre", "Data i Hora", "Nom Docent", "Especialitat", "Element triat (Codi/Nom)", "Estat Sincronització", "Detalls / Observacions"]);
+      iaSheet.getRange("A1:G1").setBackground("#cbd5e1").setFontWeight("bold").setHorizontalAlignment("center");
+    }
+    
+    // Escrivim ABSOLUTAMENT TOTES les matèries triades al "Full IA" per mantenir el control perfecte cronològic
+    for (var m = 0; m < selectedIds.length; m++) {
+      var isMatched = matchedIndices.indexOf(m) !== -1;
+      var status = isMatched ? "Sincronitzat correctament a la Columna J" : "Pendent - No trobat al full principal";
+      var instruction = isMatched ? 
+        "L'element s'ha enllaçat amb èxit a la llista d'assignació directa." : 
+        "S'ha desat el registre d'elecció. Revisa si el codi d'aquest càrrec o mòdul coincideix exactament al teu full principal.";
+      
+      var nextRegNum = iaSheet.getLastRow(); // Comptador correlatiu
+      
+      iaSheet.appendRow([
+        nextRegNum,
+        new Date(),
+        teacherName,
+        teacherSpec,
+        selectedCodes[m] + " - " + selectedNames[m],
+        status,
+        instruction
+      ]);
+    }
+    
+    return ContentService.createTextOutput("Sincronització Correcta").setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService.createTextOutput("Error: " + err.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}</pre>
+                <ol class="list-decimal list-inside space-y-1.5 font-medium" start="3">
+                    <li>Fes clic a Desar i prem <b>Implementar > Nueva implementación</b>.</li>
+                    <li>Selecciona: "Tipo: <b>Aplicación web</b>", "Ejecutar como: <b>Yo</b>" i "Quién tiene acceso: <b>Cualquiera</b>".</li>
+                    <li>Clica a <b>Implementar</b>, accepta els permisos i <b>copia la URL de l'aplicació web</b> que et donarà.</li>
+                    <li>Enganxa aquesta URL directament a la barra de dalt del teu panell de coordinació web de l'institut.</li>
+                </ol>
+                <button onclick="closeSheetsGuide()" class="w-full mt-2 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold">Entès i Copiat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL D'IDENTIFICACIÓ DEL DOCENT -->
+    <div id="identity-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 animate-fadeIn">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+                <h3 class="text-base font-extrabold text-slate-950 flex items-center gap-2">
+                    <i class="fa-solid fa-user-gear text-indigo-600"></i> Identificació de l'Usuari
+                </h3>
+                <button onclick="closeIdentityModal()" class="text-slate-400 hover:text-slate-600 transition-colors"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-xs text-slate-500 leading-relaxed">Si us plau, indica el teu nom i lletra inicial del Cognom, per exemple: Alba P.</p>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Nom i Cognoms</label>
+                    <input type="text" id="ident-name" placeholder="Ex: Alba P." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Especialitat / Perfil / Departament</label>
+                    <input type="text" id="ident-spec" placeholder="Ex: Org. i Gestió Comercial" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                </div>
+                <button onclick="saveIdentity()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors mt-2">
+                    Desar i Continuar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL D'ÈXIT D'ENVIAMENT -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-100 text-center">
+            <div class="h-14 w-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl mx-auto mb-3 shadow-xs">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Proposta enviada amb èxit!</h3>
+            <p class="text-slate-500 text-xs leading-relaxed mb-5">S'han registrat els teus "globus" triats i hores sol·licitades directament al panell de coordinació del Jaume Mimó.</p>
+            <button onclick="closeSuccessModal()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-xs transition-colors">
+                D'acord
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓ PERSONALITZAT -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-[110] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-100 text-center">
+            <div class="h-12 w-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-lg mx-auto mb-3">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="confirm-title" class="text-sm font-bold text-slate-900 mb-1">Confirmar acció</h3>
+            <p id="confirm-message" class="text-slate-500 text-xs leading-relaxed mb-5">Estàs segur que vols continuar?</p>
+            <div class="flex items-center gap-2">
+                <button onclick="closeConfirmModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors">Cancel·lar</button>
+                <button id="confirm-ok-btn" class="w-1/2 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs shadow-md transition-colors">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logica d'Importació i Integració de Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIGURACIÓ ACTIVA DE LA TEVA BASE DE DADES DE FIREBASE DEL MIMÓ
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ins-jaume-mimo';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config ? JSON.parse(__firebase_config) : {
+          apiKey: "AIzaSyC-kifa-Jo1HqHZdYN2Pwm-RQIotOILyew",
+          authDomain: "desiderata-mimo.firebaseapp.com",
+          projectId: "desiderata-mimo",
+          storageBucket: "desiderata-mimo.firebasestorage.app",
+          messagingSenderId: "919609568036",
+          appId: "1:919609568036:web:7af6acaa8da6dec78321b1"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db = null;
+        let auth = null;
+        let isFirebaseInitialized = false;
+
+        const defaultDatabase = [
+            // ==========================================
+            // Coordinacions i Càrrecs (coor) - Comerç i Administració
+            // ==========================================
+            { id: 'coor_estudis', code: 'COORD', name: 'Cap d\'ESTUDIS + sec', hours: 42, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Equip Directiu', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Gestió acadèmica del centre.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_dept', code: 'COORD', name: 'Cap de Dept', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Departament', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Reunions i coordinació de departament.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_prac1', code: 'COORD', name: 'Pràctiques (FCT / Dual - Grup 1)', hours: 7, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'FCT / Dual', schedule: 'Seguiment pràctiques', specialty: 'Coordinació', benefits: ['Gestió de convenis i visites.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_prac2', code: 'COORD', name: 'Pràctiques (FCT / Dual - Grup 2)', hours: 9, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'FCT / Dual', schedule: 'Seguiment pràctiques', specialty: 'Coordinació', benefits: ['Gestió de convenis i visites.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_prac3', code: 'COORD', name: 'Pràctiques (FCT / Dual - Grup 3)', hours: 8, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'FCT / Dual', schedule: 'Seguiment pràctiques', specialty: 'Coordinació', benefits: ['Gestió de convenis i visites.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_mobi', code: 'COORD', name: 'Mobilitat', hours: 12, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Internacional', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Coordinació general de mobilitat i convenis.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_eras2', code: 'COORD', name: 'Adj Erasmus 2', hours: 10, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Internacional', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Suport gestió projectes Erasmus.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_eras1', code: 'COORD', name: 'Adj Erasmus', hours: 3, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Internacional', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Suport gestió projectes Erasmus.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_eras3', code: 'COORD', name: 'Adj Erasmus 3', hours: 3, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Internacional', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Suport gestió projectes Erasmus.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_semi', code: 'COORD', name: 'Cap de seminari', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Departament', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Gestió de reunions de seminari.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_dept_adm', code: 'COORD', name: 'Cap de Dept de Adm', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Departament', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Gestió departament administratiu.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_innova', code: 'COORD', name: 'Xarxa "InnovaFP"', hours: 2, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Innovació', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Coordinació de projectes d\'innovació.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_empren', code: 'COORD', name: 'Xarxa "Emprèn"', hours: 2, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Emprenedoria', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Foment de projectes d\'emprenedoria.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_empresa', code: 'COORD', name: 'Xarxa Empresa', hours: 2, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Empreses', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Relació amb teixit empresarial.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_pfi_tecn', code: 'COORD', name: 'Hores a PFI Tècniques bàsiques comercialització', hours: 6, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'PFI', schedule: 'Hores de docència', specialty: 'PFI', benefits: ['Docència pràctica al PFI.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_pfi_inc', code: 'COORD', name: 'Hores a PFI INC, PRL, projecte', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'PFI', schedule: 'Hores solapades seran 3', specialty: 'PFI', benefits: ['Hores de projecte i prevenció.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_pfi_aten', code: 'COORD', name: 'Hores a PFI Atenció al client', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'PFI', schedule: 'Hores de docència', specialty: 'PFI', benefits: ['Docència d\'atenció al client en PFI.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_com', code: 'COORD', name: 'Comunicació', hours: 7, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Comunicació', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Gestió comunicativa del centre.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_adj_com_eso', code: 'COORD', name: 'Adjunt comunicació (eso batx)', hours: 6, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Comunicació', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Suport xarxes i difusió ESO/Batx.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_adj_com_eras', code: 'COORD', name: 'Adjunt comunicació Erasmus+ projectes', hours: 2, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Comunicació', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Difusió de projectes internacionals.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_meto', code: 'COORD', name: 'Metodologia / esdeveniments', hours: 5, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Metodologia', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Organització d\'actes i esdeveniments.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_adj_meto', code: 'COORD', name: 'Adjunt meto / esdeveniments', hours: 6, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Metodologia', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Suport logístic a esdeveniments.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_rel_inst', code: 'COORD', name: 'Relacions institucionals', hours: 6, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Institucional', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Enllaç amb entitats externes.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_catskills', code: 'COORD', name: 'CatSkills', hours: 2, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Competició', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Preparació campionats CatSkills.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_reptes', code: 'COORD', name: 'Coord Reptes', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Metodologia', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Coordinació de projectes de reptes d\'aprenentatge.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_eso', code: 'COORD', name: 'Hores ESO (Comerç)', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'ESO', schedule: 'En dos bimestres i algú amb càrrec', specialty: 'Coordinació', benefits: ['Coordinació d\'etapa d\'ESO.'], assignedTeacher: '', status: 'available', dept: 'Comerç' },
+            { id: 'coor_manteniment', code: 'COORD', name: 'Manteniment espais', hours: 5, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Manteniment', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Gestió i millora dels espais.'], assignedTeacher: '', status: 'available', dept: 'General' },
+            { id: 'coor_com_extra', code: 'COORD', name: 'Hores comunicació extra (altres)', hours: 9, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Comunicació', schedule: 'Hores de càrrec', specialty: 'Coordinació', benefits: ['Tasques extres de coordinació.'], assignedTeacher: '', status: 'available', dept: 'General' },
+
+            // CÀRRECS ADMINISTRACIÓ
+            { id: 'coor_ipo_metall', code: 'COORD', name: 'Ipo metall (Repartir)', hours: 10, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Departament Metall', schedule: 'Hores de càrrec', specialty: 'Administració / Metall', benefits: ['Hores de dístribució d\'àrea.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_catskills_adm', code: 'COORD', name: 'CatSkills (Administració)', hours: 3, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Competició', schedule: 'Hores de càrrec', specialty: 'Administració', benefits: ['Preparació campionats competència.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_practiques_adm', code: 'COORD', name: 'Pràctiques (Administració)', hours: 13, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'FCT / Dual', schedule: 'Seguiment pràctiques', specialty: 'Administració', benefits: ['Gestió de convenis i visites de l\'alumnat.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_gm_adm', code: 'COORD', name: 'Coord GM', hours: 5, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Coordinació', schedule: 'Hores de càrrec', specialty: 'Administració', benefits: ['Coordinació de Cicle Mitjà.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_majors_60', code: 'COORD', name: 'Hores lectives reducció majors de 60', hours: 4, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Reducció', schedule: 'Hores de reducció', specialty: 'Personal', benefits: ['Reducció horària de docència.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_eso_adm', code: 'COORD', name: 'Hores ESO (en dos bimestres i algú amb càrrec)', hours: 3, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'ESO', schedule: 'Hores de docència', specialty: 'Administració', benefits: ['Col·laboració secundària.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+            { id: 'coor_alumni_adm', code: 'COORD', name: 'Liderar Alumni FP (i Actic)', hours: 3, course: 1, study: 'coor', cycle: 'Coordinacions i Càrrecs', group: 'Alumni', schedule: 'Hores de càrrec', specialty: 'Administració', benefits: ['Seguiment d\'exalumnes i coordinació de proves.'], assignedTeacher: '', status: 'available', dept: 'Administració' },
+
+            // ==========================================
+            // 1) CFGM ACTIVITATS COMERCIALS (ac)
+            // ==========================================
+            { id: 'ac_1232', code: '1232', name: 'Processos de venda', hours: 4, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '3h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Mòdul central d\'especialitat. IPO.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1228', code: '1228', name: 'Tècniques de magatzem', hours: 3, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Coordinat amb Gestió de Compres.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1229', code: '1229', name: 'Gestió de compras', hours: 3, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Coordinat amb Tècniques de Magatzem.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1231', code: '1231', name: 'Dinamització del punt de venda', hours: 4, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '3h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Responsable de Cat5skills.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1233', code: '1233', name: 'Aplicacions informàtiques per al comerç', hours: 4, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '3h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Desdoblament dinàmic.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1234', code: '1234', name: 'Serveis d\'atenció comercial', hours: 3, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Coordinat amb Atenció al client.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1235', code: '1235', name: 'Comerç electrònic', hours: 3, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['SAC.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_C056', code: 'C056', name: 'Català / Aranès professional', hours: 2, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h totals', specialty: 'Llengua Catalana', benefits: ['Llengua professional.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_0156', code: '0156', name: 'Anglès professional', hours: 2, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Bloquejat per assignació prèvia.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'ac_1708', code: '1708', name: 'Sostenibilitat aplicada al sistema productiu', hours: 1, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '1h total', specialty: 'Sostenibilitat', benefits: ['Hores de participació.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1709', code: '1709', name: 'Itinerari personal per a l\'ocupabilitat I', hours: 4, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '3h total + 1h desdoblament', specialty: 'FOL', benefits: ['Hores de referència 1232.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_tut1', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment I', hours: 2, course: 1, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '1r Curs', schedule: '1h total + 1h desdoblament', specialty: 'Comerç i Màrqueting', benefits: ['Seguiment active.'], assignedTeacher: '', status: 'available' },
+            
+            { id: 'ac_1226', code: '1226', name: 'Màrqueting en l\'activitat comercial', hours: 3, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '3h totals', specialty: 'Comerç i Màrqueting', benefits: ['Branca comercial.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1230', code: '1230', name: 'Venda tècnica', hours: 3, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '3h totals', specialty: 'Comerç i Màrqueting', benefits: ['Estratègies comercials.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1227', code: '1227', name: 'Gestió d\'un petit comerç', hours: 3, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '3h totals', specialty: 'Comerç i Màrqueting', benefits: ['Foment d\'emprenedoria.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1664', code: '1664', name: 'Digitalització aplicada als sectors productius', hours: 1, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '1h total', specialty: 'Transversal', benefits: ['Noves tecnologies.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1710', code: '1710', name: 'Itinerari personal per a l\'ocupabilitat II', hours: 2, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '2h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_1713', code: '1713', name: 'Projecte intermodular (D 825, ND 363)', hours: 6, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '6h projecte', specialty: 'Comerç i Màrqueting', benefits: ['Coordinació d\'equips.'], assignedTeacher: '', status: 'available' },
+            { id: 'ac_mpo2', code: 'MPO', name: 'Anglès Professional', hours: 2, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Bloquejat per assignació prèvia.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'ac_tut2', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment II', hours: 1, course: 2, study: 'ac', cycle: 'CFGM Activitats Comercials', group: '2n Curs', schedule: '1h setmanal', specialty: 'Comerç i Màrqueting', benefits: ['Tancament del cicle.'], assignedTeacher: '', status: 'available' },
+
+            // ==========================================
+            // 2) CFGS MÀRQUETING I PUBLICITAT (mp)
+            // ==========================================
+            { id: 'mp_0623', code: '0623', name: 'Gestió econòmica i financera de l\'empresa', hours: 6, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '6h totals', specialty: 'Administració', benefits: ['Assignat inicialment a Rafa.'], assignedTeacher: 'Rafa', status: 'assigned' },
+            { id: 'mp_0930', code: '0930', name: 'Polítiques de màrqueting', hours: 6, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '6h totals', specialty: 'Comerç i Màrqueting', benefits: ['Mòdul clau de la branca.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1007', code: '1007', name: 'Disseny i elaboració de material de comunicació', hours: 6, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '6h totals', specialty: 'Disseny', benefits: ['Coneixements de paquet de disseny requerits. Raquel.'], assignedTeacher: 'Raquel', status: 'assigned' },
+            { id: 'mp_1008', code: '1008', name: 'Mitjans i suports de comunicació', hours: 4, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Adjunt de comunicació. UNICORN 1.'], assignedTeacher: 'UNICORN 1', status: 'assigned' },
+            { id: 'mp_1010', code: '1010', name: 'Investigació comercial', hours: 6, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '6h totals', specialty: 'Comerç i Màrqueting', benefits: ['Anàlisi de mercats.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1110', code: '1110', name: 'Atenció al client, consumidor i usuari', hours: 4, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Preparació d\'activitats de simulació.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1708', code: '1708', name: 'Sostenibilitat aplicada al sistema productiu', hours: 2, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '2h totals', specialty: 'Sostenibilitat', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1709', code: '1709', name: 'Itinerari personal per a l\'ocupabilitat I', hours: 6, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '6h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_0179', code: '0179', name: 'Anglès professional', hours: 4, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '4h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Ana AN.'], assignedTeacher: 'Ana AN', status: 'assigned' },
+            { id: 'mp_C076', code: 'C076', name: 'Català / Aranès professional', hours: 4, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '4h totals', specialty: 'Llengua Catalana', benefits: ['Nivell avançat.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_tut1', code: 'Tutoria', name: 'Tutoria i orientació acadèmica I', hours: 2, course: 1, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '1r Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Acompanyament actiu.'], assignedTeacher: '', status: 'available' },
+            
+            { id: 'mp_1009', code: '1009', name: 'Relacions públiques i organització d\'esdeveniments', hours: 4, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Figura organitzadora. Lidia.'], assignedTeacher: 'Lidia', status: 'assigned' },
+            { id: 'mp_1011', code: '1011', name: 'Treball de camp en la investigació comercial', hours: 4, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Estudis de camp.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_0931', code: '0931', name: 'Màrqueting digital', hours: 8, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '8h totals', specialty: 'Comerç i Màrqueting', benefits: ['Adjunt de comunicació. UNICORN 1.'], assignedTeacher: 'UNICORN 1', status: 'assigned' },
+            { id: 'mp_1109', code: '1109', name: 'Llançament de productes i serveis', hours: 4, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Desenvolupament de productes.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1665', code: '1665', name: 'Digitalització aplicada als sectors productius', hours: 2, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '2h totals', specialty: 'Transversal', benefits: ['Tecnologia sectorial.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1710', code: '1710', name: 'Itinerari per a l\'ocupabilitat II', hours: 4, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '4h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'mp_1012', code: '1012', name: 'Projecte intermodular (D 776, ND 363)', hours: 12, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '12h totals', specialty: 'Comerç i Màrqueting', benefits: ['A repartir en un màxim de dos docents. Rafa.'], assignedTeacher: 'Rafa', status: 'assigned' },
+            { id: 'mp_mpo2', code: 'MPO', name: 'Anglès Professional', hours: 4, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '4h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Ana AN.'], assignedTeacher: 'Ana AN', status: 'assigned' },
+            { id: 'mp_tut2', code: 'Tutoria', name: 'Tutoria i orientació acadèmica II', hours: 2, course: 2, study: 'mp', cycle: 'CFGS Màrqueting i Publicitat', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Projecte i final de cicle.'], assignedTeacher: '', status: 'available' },
+
+            // ==========================================
+            // 3) CFGS COMERÇ INTERNACIONAL (ci)
+            // ==========================================
+            { id: 'ci_0622', code: '0622', name: 'Transport internacional de mercaderies', hours: 3, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '3h totals', specialty: 'Transport', benefits: ['Liderar el Forma\'t al Port.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0623', code: '0623', name: 'Gestió econòmica i financera de l\'empresa', hours: 3, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Assignat inicialment a Jorge.'], assignedTeacher: 'Jorge', status: 'assigned' },
+            { id: 'ci_0625', code: '0625', name: 'Logística d\'emmagatzematge', hours: 2, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Assignat inicialment a Victor.'], assignedTeacher: 'Victor', status: 'assigned' },
+            { id: 'ci_0627', code: '0627', name: 'Gestió administrativa del comerç internacional', hours: 4, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Liderar Projecte d\'Índia.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0823', code: '0823', name: 'Màrqueting internacional', hours: 3, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '3h totals', specialty: 'Comerç i Màrqueting', benefits: ['Assignat inicialment a Lidia.'], assignedTeacher: 'Lidia', status: 'assigned' },
+            { id: 'ci_C001', code: 'C001', name: 'Segona llengua estrangera (Francès)', hours: 2, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '2h totals', specialty: 'Segona Llengua', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'ci_0179', code: '0179', name: 'Anglès professional', hours: 2, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'ci_1665', code: '1665', name: 'Digitalització aplicada als sectors productius', hours: 1, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '1h total', specialty: 'Transversal', benefits: ['Eines digitals aplicades.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_1708', code: '1708', name: 'Sostenibilitat aplicada al sistema productiu', hours: 1, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '1h total', specialty: 'Sostenibilitat', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_1709', code: '1709', name: 'Itinerari personal per a l\'ocupabilitat I', hours: 3, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '3h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_tut1', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment I', hours: 1, course: 1, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '1r Curs', schedule: '1h setmanal', specialty: 'Comerç i Màrqueting', benefits: ['Seguiment.'], assignedTeacher: '', status: 'available' },
+            
+            { id: 'ci_0822', code: '0822', name: 'Sistema d\'informació de mercats', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Estudis de mercat.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0824', code: '0824', name: 'Negociació internacional', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Projecte de Negociació.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0825', code: '0825', name: 'Finançament internacional', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Finances corporatives.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0826', code: '0826', name: 'Mitjans de pagament internacional', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Mitjans de pagament.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_0827', code: '0827', name: 'Comerç digital internacional', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Comerç i Màrqueting', benefits: ['Venda en línia.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_1710', code: '1710', name: 'Itinerari personal per a l\'ocupabilitat II', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'ci_1486', code: '1486', name: 'Projecte intermodular (D 710, ND 363)', hours: 6, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '6h totals', specialty: 'Comerç i Màrqueting', benefits: ['A repartir en un màxim de dos docents. Jorge.'], assignedTeacher: 'Jorge', status: 'assigned' },
+            { id: 'ci_mpoFranc', code: 'MPO', name: 'Francès Professional (MPO)', hours: 1, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '1h total', specialty: 'Segona Llengua', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'ci_mpoAng', code: 'MPO', name: 'Anglès Professional (MPO)', hours: 2, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Lidia G.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'ci_tut2', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment II', hours: 1, course: 2, study: 'ci', cycle: 'CFGS Comerç Internacional', group: '2n Curs', schedule: '1h setmanal', specialty: 'Comerç i Màrqueting', benefits: ['Avaluació.'], assignedTeacher: '', status: 'available' },
+
+            // ==========================================
+            // 4) CFGS TRANSPORT I LOGÍSTICA (tl)
+            // ==========================================
+            { id: 'tl_0622', code: '0622', name: 'Transport internacional de mercaderies (M9)', hours: 3, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '3h totals', specialty: 'Transport', benefits: ['Liderar el Forma\'t al Port.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0623', code: '0623', name: 'Gestió econòmica i financera de l\'empresa (M4)', hours: 3, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Administració logística.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0625', code: '0625', name: 'Logística d\'emmagatzematge (M6)', hours: 2, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Assignat inicialment a Victor.'], assignedTeacher: 'Victor', status: 'assigned' },
+            { id: 'tl_0626', code: '0626', name: 'Logística d\'aprovisionament (M5)', hours: 2, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Compres i estocs.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0627', code: '0627', name: 'Gestió administrativa del comerç internacional (M2)', hours: 4, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '4h totals', specialty: 'Comerç i Màrqueting', benefits: ['Liderar Projecte d\'Índia.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_C002', code: 'C002', name: 'Segona llengua estrangera per al transport (M12)', hours: 2, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '2h totals', specialty: 'Segona Llengua', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'tl_C022', code: 'C022', name: 'Organització d\'altres serveis de transport (M10)', hours: 2, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Serveis de transport.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0179', code: '0179', name: 'Anglès professional (M11)', hours: 2, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'tl_1665', code: '1665', name: 'Digitalització aplicada als sectors productius (D)', hours: 1, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '1h total', specialty: 'Transversal', benefits: ['Tecnologia de dades.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_1708', code: '1708', name: 'Sostenibilitat aplicada al systema productiu (S)', hours: 1, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '1h total', specialty: 'Sostenibilitat', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_1709', code: '1709', name: 'Itinerari per a l\'ocupabilitat I (I1)', hours: 3, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '3h totals', specialty: 'FOL', benefits: ['Mòdul orientatiu.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_tut1', code: 'Tutoria', name: 'Tutoria d\'orientació acadèmica I', hours: 1, course: 1, study: 'tl', cycle: 'CFGS Transport i Logística', group: '1r Curs', schedule: '1h setmanal', specialty: 'Transport', benefits: ['Coordinació.'], assignedTeacher: '', status: 'available' },
+            
+            { id: 'tl_0621', code: '0621', name: 'Gestió administrativa del transport i la logística', hours: 3, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '3h totals', specialty: 'Transport', benefits: ['Processos administratius.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0624', code: '0624', name: 'Comercialització del transport i la logística', hours: 2, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Vendes i rutes.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0628', code: '0628', name: 'Organització del transport de viatgers', hours: 2, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Transport urbà.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_0629', code: '0629', name: 'Organització del transport de mercaderies', hours: 2, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '2h totals', specialty: 'Transport', benefits: ['Gestió de rutes.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_1710', code: '1710', name: 'Itinerari per a l\'ocupabilitat II', hours: 2, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '2h totals', specialty: 'FOL', benefits: ['Hores de referència. Rafa.'], assignedTeacher: 'Rafa', status: 'assigned' },
+            { id: 'tl_0630', code: '0630', name: 'Projecte intermodular (D 726, ND 363)', hours: 6, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '6h totals', specialty: 'Transport', benefits: ['A repartir en dos docents.'], assignedTeacher: '', status: 'available' },
+            { id: 'tl_mpoFranc', code: 'MPO', name: 'Francès Professional (MPO)', hours: 1, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '1h total', specialty: 'Segona Llengua', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+            { id: 'tl_mpoAng', code: 'MPO', name: 'Anglès Professional (MPO)', hours: 2, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Assignat inicialment a Lidia G.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'tl_tut2', code: 'Tutoria', name: 'Tutoria d\'orientació acadèmica II', hours: 1, course: 2, study: 'tl', cycle: 'CFGS Transport i Logística', group: '2n Curs', schedule: '1h setmanal', specialty: 'Transport', benefits: ['Assignat inicialment a Rosalia.'], assignedTeacher: 'Rosalia', status: 'assigned' },
+
+            // ==========================================
+            // 5) CFGM GESTIÓ ADMINISTRATIVA (ga)
+            // ==========================================
+            { id: 'ga_0437', code: '0437', name: 'Comunicació empresarial i atenció al client. (M1)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Mòdul central.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0438', code: '0438', name: 'Operacions administratives de compravenda. (M2)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Operacions comercials.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0439', code: '0439', name: 'Empresa i administració. (M9)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Estructura corporativa.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0440', code: '0440', name: 'Tractament informàtic de la informació. (M7)', hours: 5, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '5h totals', specialty: 'Administració', benefits: ['Ofimàtica avançada.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0441', code: '0441', name: 'Tècnica comptable. (M5)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Fonaments de la comptabilitat.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0448', code: '0448', name: 'Operacions auxiliars de gestió de tresoreria. (M4)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Tresoreria.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_C056', code: 'C056', name: 'Català / Aranès professional.(C)', hours: 2, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '2h totals', specialty: 'Llengua Catalana', benefits: ['Llengua aplicada.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_1709', code: '1709', name: 'Itinerari personal per a l\'ocupabilitat I.(I1)', hours: 3, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '3h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_tut1', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment I', hours: 2, course: 1, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '1r Curs', schedule: '1h total + 1h desdoblament', specialty: 'Administració', benefits: ['Seguiment.'], assignedTeacher: '', status: 'available' },
+
+            { id: 'ga_0156', code: '0156', name: 'Anglès professional.', hours: 2, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Bloquejat per assignació.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'ga_0442', code: '0442', name: 'Operacions administratives de recursos humans.', hours: 3, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Nòmines.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0443', code: '0443', name: 'Tractament de la documentació comptable.', hours: 3, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Comptabilitat analítica.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_0446', code: '0446', name: 'Empresa a l\'aula. (D 404, ND 182)', hours: 3, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Simulació.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_1665', code: '1665', name: 'Digitalització aplicada als sectors productius.', hours: 1, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '1h total', specialty: 'Transversal', benefits: ['Noves tecnologies.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_1708', code: '1708', name: 'Sostenibilitat aplicada al sistema productiu.', hours: 1, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '1h total', specialty: 'Sostenibilitat', benefits: ['Sostenibilitat.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_1710', code: '1710', name: 'Itinerari personal per a l\'ocupabilitat II.', hours: 2, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '2h totals', specialty: 'FOL', benefits: ['Participació.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_1713', code: '1713', name: 'Projecte intermodular. (ND 181, D 405)', hours: 3, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Coordinació de projectes.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_mpo', code: 'MPO', name: 'MPO Aplicacions informàtiques', hours: 2, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '2h totals', specialty: 'Administració', benefits: ['Contasol, Factusol.'], assignedTeacher: '', status: 'available' },
+            { id: 'ga_tut2', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment II', hours: 1, course: 2, study: 'ga', cycle: 'CFGM Gestió Administrativa', group: '2n Curs', schedule: '1h setmanal', specialty: 'Administració', benefits: ['Tancament.'], assignedTeacher: '', status: 'available' },
+
+            // ==========================================
+            // 6) CFGS ADMINISTRACIÓ I FINANCES (af)
+            // ==========================================
+            { id: 'af_0647', code: '0647', name: 'Gestió de la documentació jurídica i empresarial. (M2)', hours: 2, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '2h totals', specialty: 'Administració', benefits: ['Projecte UF3.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0648', code: '0648', name: 'Recursos humans i responsabilitat social corporativa. (M4)', hours: 1, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '1h total', specialty: 'Administració', benefits: ['Alumni. Desdoblament: 0648.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0649', code: '0649', name: 'Ofimàtica i procés de la informació. (M5)', hours: 4, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '4h totals', specialty: 'Administració', benefits: ['ACTIC. Desdoblament: 1665.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0650', code: '0650', name: 'Procés integral de l\'activitat empresarial. (M3)', hours: 6, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '4h totals + 2h desdoblament', specialty: 'Administració', benefits: ['Sòlids coneixements.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0651', code: '0651', name: 'Comunicació i atenció al client. (M1)', hours: 4, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '4h totals', specialty: 'Administració', benefits: ['Simulació.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_C076', code: 'C076', name: 'Català / Aranès professional.(C)', hours: 2, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '2h totals', specialty: 'Llengua Catalana', benefits: ['Nivell corporatiu.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0179', code: '0179', name: 'Anglès professional.(M6)', hours: 2, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Bloquejat.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'af_1709', code: '1709', name: 'Itinerari personal per a l\'ocupabilitat I.(I1)', hours: 3, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '3h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_1665', code: '1665', name: 'Digitalització aplicada als sectors productius.(D)', hours: 1, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '1h total', specialty: 'Transversal', benefits: ['ACTIC. Desdoblament: 0649.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_1708', code: '1708', name: 'Sostenibilitat aplicada al sistema productiu.(S)', hours: 1, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '1h total', specialty: 'Sostenibilitat', benefits: ['Sostenibilitat.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_tut1', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment I', hours: 1, course: 1, study: 'af', cycle: 'CFGS Administració i Finances', group: '1r Curs', schedule: '1h setmanal', specialty: 'Administració', benefits: ['Orientació.'], assignedTeacher: '', status: 'available' },
+
+            { id: 'af_0652', code: '0652', name: 'Gestió de recursos humans.', hours: 2, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '2h totals', specialty: 'Administració', benefits: ['Gestió de personal.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0653', code: '0653', name: 'Gestió financera.', hours: 4, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '4h totals', specialty: 'Administració', benefits: ['Responsable CatSkills.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0654', code: '0654', name: 'Comptabilitat i fiscalitat.', hours: 3, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Tancaments fiscals.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0655', code: '0655', name: 'Gestió logística i comercial.', hours: 2, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '2h totals', specialty: 'Administració', benefits: ['Compres.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0656', code: '0656', name: 'Simulació empresarial. (ND 182, D 363)', hours: 3, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Desdoblament: 0657.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_0657', code: '0657', name: 'Projecte intermodular d\'administració i finances. (D 363 ND 181)', hours: 3, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '3h totals', specialty: 'Administració', benefits: ['Desdoblament: 0656.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_1710', code: '1710', name: 'Itinerari personal per a l\'ocupabilitat II.', hours: 2, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '2h totals', specialty: 'FOL', benefits: ['Hores de referència.'], assignedTeacher: '', status: 'available' },
+            { id: 'af_mpo', code: 'MPO', name: 'MPO Anglès Professional', hours: 2, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '2h totals', specialty: 'Anglès', benefits: ['Bloquejat.'], assignedTeacher: 'Lidia G', status: 'assigned' },
+            { id: 'af_tut2', code: 'Tutoria', name: 'Tutoria d\'orientació i seguiment II', hours: 1, course: 2, study: 'af', cycle: 'CFGS Administració i Finances', group: '2n Curs', schedule: '1h setmanal', specialty: 'Administració', benefits: ['Projecte.'], assignedTeacher: '', status: 'available' }
+        ];
+
+        let database = [...defaultDatabase];
+        let proposals = [];
+        let selectedSubjects = [];
+        let isEditMode = false;
+        let activeFilterStudy = 'all';  
+        let activeFilterCourse = 'all'; 
+        let activeFilterHours = 'all';  
+        let activeFilterStatus = 'all'; 
+        let activeCoorSubFilter = 'all'; 
+        let currentViewType = 'cards'; 
+        let confirmCallback = null;
+
+        // Codi de seguretat inicialitzat de localStorage o per defecte (Desi2026)
+        let coordinationPasscode = localStorage.getItem('mimo_coordination_passcode') || 'Desi2026';
+
+        window.onload = async function() {
+            loadSavedIdentity();
+            loadSheetsWebhook();
+            loadLocalSubjects(); // <-- Carrega la base de dades local de matèries abans de començar
+            loadLocalProposals(); // <-- Carrega les propostes locals de docents
+            await initFirebase();
+            if (!isFirebaseInitialized) {
+                renderSubjectCards();
+                updateSelectionDashboard();
+            }
+        }
+
+        // CARREGA I GUARDA DE MATÈRIES EN LOCALSTORAGE (XARXA DE SEGURETAT)
+        function loadLocalSubjects() {
+            const savedLocal = localStorage.getItem('mimo_local_subjects');
+            if (savedLocal) {
+                database = JSON.parse(savedLocal);
+            } else {
+                database = [...defaultDatabase];
+            }
+        }
+
+        function saveSubjectsLocally() {
+            localStorage.setItem('mimo_local_subjects', JSON.stringify(database));
+        }
+
+        // Recupera propostes locals desades per fer proves d'Excel sense connexió externa
+        function loadLocalProposals() {
+            const savedLocal = localStorage.getItem('mimo_local_proposals');
+            if (savedLocal) {
+                proposals = JSON.parse(savedLocal);
+                renderProposalsList();
+                renderProposalsTable();
+            }
+        }
+
+        function saveProposalsLocally() {
+            localStorage.setItem('mimo_local_proposals', JSON.stringify(proposals));
+        }
+
+        // Connexió amb Firestore
+        async function initFirebase() {
+            if (!firebaseConfig) {
+                console.warn("L'aplicació s'executa localment sense connexió.");
+                return;
+            }
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                isFirebaseInitialized = true;
+                listenToSubjects();
+                listenToProposals();
+            } catch (error) {
+                console.error("Error al Firebase:", error);
+            }
+        }
+
+        function listenToSubjects() {
+            try {
+                const subjectsCol = collection(db, 'artifacts', appId, 'public', 'data', 'subjects');
+                onSnapshot(subjectsCol, (snapshot) => {
+                    const loadedSubjects = [];
+                    snapshot.forEach(doc => {
+                        loadedSubjects.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    if (loadedSubjects.length === 0) {
+                        initializeDefaultSubjectsInCloud();
+                    } else {
+                        database = loadedSubjects;
+                        saveSubjectsLocally(); // Sincronitzem també en local per si es perd la xarxa
+                        renderSubjectCards();
+                        updateSelectionDashboard();
+                        renderProposalsTable();
+                    }
+                }, (error) => {
+                    console.error("Error de xarxa en rebre matèries:", error);
+                });
+            } catch (err) {
+                console.warn("Firestore offline - usant persistència local de matèries.");
+            }
+        }
+
+        async function initializeDefaultSubjectsInCloud() {
+            const subjectsCol = collection(db, 'artifacts', appId, 'public', 'data', 'subjects');
+            for (const subj of defaultDatabase) {
+                await setDoc(doc(subjectsCol, subj.id), subj);
+            }
+        }
+
+        // Força el restabliment d'origen de la llista de l'excel a Firestore i local
+        async function forceSyncDefaultDatabase() {
+            showCustomConfirm(
+                "Sincronitzar Base de Dades",
+                "Aquesta acció substituirà tota la llista del núvol i del teu navegador pels 'globus' originals de Comerç, Administració i les Coordinacions. Es perdran totes les edicions personalitzades actuals. Vols continuar?",
+                async () => {
+                    if (isFirebaseInitialized) {
+                        try {
+                            const subjectsCol = collection(db, 'artifacts', appId, 'public', 'data', 'subjects');
+                            for (const subj of defaultDatabase) {
+                                await setDoc(doc(subjectsCol, subj.id), subj);
+                            }
+                            database = [...defaultDatabase];
+                            saveSubjectsLocally();
+                            showCustomConfirm("Sincronització Completada", "S'han carregat tots els mòduls i coordinacions correctament a la base de dades central del núvol.", () => {});
+                        } catch (error) {
+                            console.error("Error durant la sincronització forçada:", error);
+                        }
+                    } else {
+                        database = [...defaultDatabase];
+                        saveSubjectsLocally();
+                        renderSubjectCards();
+                        updateSelectionDashboard();
+                        renderProposalsTable();
+                        showCustomConfirm("Sincronització Completada", "S'han restaurat les dades locals correctament a l'estat inicial.", () => {});
+                    }
+                }
+            );
+        }
+
+        function listenToProposals() {
+            try {
+                const proposalsCol = collection(db, 'artifacts', appId, 'public', 'data', 'proposals');
+                onSnapshot(proposalsCol, (snapshot) => {
+                    proposals = [];
+                    snapshot.forEach(doc => {
+                        proposals.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    const savedLocal = localStorage.getItem('mimo_local_proposals');
+                    if (savedLocal) {
+                        const locals = JSON.parse(savedLocal);
+                        locals.forEach(localProp => {
+                            if (!proposals.some(p => p.id === localProp.id)) {
+                                proposals.push(localProp);
+                            }
+                        });
+                    }
+                    saveProposalsLocally();
+                    renderProposalsList();
+                    renderProposalsTable();
+                });
+            } catch (err) {
+                console.warn("Firestore offline - usant persistència local de propostes.");
+            }
+        }
+
+        // Renderitzat de Targetes ("Globus")
+        function renderSubjectCards() {
+            const grid = document.getElementById('materies-grid');
+            if (!grid) return;
+            grid.innerHTML = ''; 
+
+            const searchQuery = document.getElementById('search-input').value.toLowerCase();
+
+            database.forEach(subject => {
+                if (activeFilterStudy !== 'all' && subject.study !== activeFilterStudy) return;
+
+                if (activeFilterStudy === 'coor') {
+                    if (activeCoorSubFilter === 'com' && subject.dept !== 'Comerç') return;
+                    if (activeCoorSubFilter === 'adm' && subject.dept !== 'Administració') return;
+                    if (activeCoorSubFilter === 'gen' && subject.dept !== 'General') return;
+                }
+
+                if (activeFilterCourse !== 'all' && subject.course !== parseInt(activeFilterCourse)) return;
+
+                if (activeFilterHours === 'short' && subject.hours > 3) return;
+                if (activeFilterHours === 'long' && subject.hours < 4) return;
+
+                const isAssigned = (subject.assignedTeacher && subject.assignedTeacher.trim() !== '');
+                if (activeFilterStatus === 'available' && isAssigned) return;
+
+                if (searchQuery) {
+                    const searchString = `${subject.code} ${subject.name} ${subject.cycle} ${subject.specialty} ${subject.assignedTeacher || ''} ${subject.dept || ''}`.toLowerCase();
+                    if (!searchString.includes(searchQuery)) return;
+                }
+
+                const isSelected = selectedSubjects.includes(subject.id);
+                let borderStyle = 'border-slate-200';
+                let statusLabel = '';
+                let actionBtnText = `<i class="fa-solid fa-plus text-xs"></i> Sol·licitar aquest mòdul`;
+                let actionBtnClass = 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs';
+                
+                if (isAssigned) {
+                    borderStyle = 'border-rose-200 bg-rose-50/20';
+                    statusLabel = `<span class="text-[10px] font-extrabold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200/50"><i class="fa-solid fa-lock text-[9px] mr-1"></i> Assignat a: ${subject.assignedTeacher}</span>`;
+                    actionBtnText = `<i class="fa-solid fa-ban text-xs"></i> Mòdul ocupat`;
+                    actionBtnClass = 'bg-slate-100 text-slate-400 cursor-not-allowed';
+                } else if (isSelected) {
+                    borderStyle = 'border-emerald-600 bg-emerald-50/10';
+                    statusLabel = `<span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/50"><i class="fa-solid fa-check text-[9px] mr-1"></i> Demanat correctament</span>`;
+                    actionBtnText = `<i class="fa-solid fa-check text-xs"></i> Desestimar grup`;
+                    actionBtnClass = 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs';
+                } else {
+                    statusLabel = `<span class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100"><i class="fa-regular fa-circle-check text-[9px] mr-1"></i> Disponible</span>`;
+                }
+
+                let deptBadge = '';
+                if (subject.study === 'coor' && subject.dept) {
+                    let badgeColor = 'bg-slate-100 text-slate-700 border-slate-200/60';
+                    if (subject.dept === 'Comerç') {
+                        badgeColor = 'bg-indigo-50 text-indigo-700 border-indigo-100';
+                    } else if (subject.dept === 'Administració') {
+                        badgeColor = 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-100';
+                    }
+                    deptBadge = `<span class="text-[9px] font-extrabold px-2.5 py-1 rounded-lg border ${badgeColor} uppercase tracking-wider">${subject.dept}</span>`;
+                }
+
+                let benefitsList = '';
+                if (subject.benefits && subject.benefits.length > 0) {
+                    subject.benefits.forEach(b => {
+                        if (b.trim() !== '') {
+                            benefitsList += `
+                                <li class="flex items-start gap-1.5 leading-snug text-slate-600">
+                                    <i class="fa-solid fa-circle-info text-indigo-500 text-[11px] mt-0.5 flex-shrink-0"></i> 
+                                    <span>${b}</span>
+                                </li>`;
+                        }
+                    });
+                } else {
+                    benefitsList = `<li class="text-slate-400 italic">Sense especificacions addicionals.</li>`;
+                }
+
+                let adminControls = '';
+                if (isEditMode) {
+                    adminControls = `
+                        <div class="flex items-center gap-1 p-2 bg-slate-50 border-t border-slate-100 flex-wrap justify-between">
+                            <button onclick="openEditModal('${subject.id}')" class="flex-1 min-w-[70px] py-1.5 px-2 text-[10px] font-bold bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg transition-colors flex items-center justify-center gap-1" title="Editar matèria">
+                                <i class="fa-solid fa-pen-to-square"></i> Edita
+                            </button>
+                            <button onclick="duplicateSubject('${subject.id}')" class="flex-1 min-w-[70px] py-1.5 px-2 text-[10px] font-bold bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded-lg transition-colors flex items-center justify-center gap-1" title="Duplicar aquest globus">
+                                <i class="fa-solid fa-copy"></i> Duplica
+                            </button>
+                            <button onclick="deleteSubject('${subject.id}')" class="flex-1 min-w-[70px] py-1.5 px-2 text-[10px] font-bold bg-rose-100 hover:bg-rose-200 text-rose-800 rounded-lg transition-colors flex items-center justify-center gap-1" title="Eliminar matèria">
+                                <i class="fa-solid fa-trash-can"></i> Elimina
+                            </button>
+                        </div>
+                    `;
+                }
+
+                const cardHTML = `
+                    <div class="globus-card bg-white rounded-3xl border ${borderStyle} shadow-xs overflow-hidden flex flex-col h-full animate-fadeIn">
+                        <div class="p-5 pb-3.5 border-b border-slate-100">
+                            <div class="flex items-start justify-between gap-2.5 mb-2.5">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <span class="text-[10px] font-extrabold tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg uppercase">
+                                        Mòdul ${subject.code}
+                                    </span>
+                                    ${deptBadge}
+                                </div>
+                                <div class="flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full text-[11px] font-bold flex-shrink-0">
+                                    <i class="fa-regular fa-clock text-[10px]"></i> ${subject.hours}h setmanals
+                                </div>
+                            </div>
+                            <h2 class="text-base font-bold text-slate-900 leading-snug truncate-2-lines">${subject.name}</h2>
+                            <p class="text-[11px] text-slate-400 font-semibold mt-1">${subject.cycle}</p>
+                        </div>
+                        
+                        <div class="p-5 pt-4 flex-grow flex flex-col gap-4">
+                            <div>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Estat de distribució</span>
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-[10px] font-bold">
+                                        <i class="fa-solid fa-users text-slate-400 text-[9px]"></i> ${subject.group}
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-bold bg-slate-50 border border-slate-100 px-2.5 py-0.5 rounded-lg">${subject.schedule || 'Sense especificacions'}</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Perfil Requerit / Especialitat</span>
+                                <p class="text-[10px] text-slate-700 font-semibold flex items-center gap-1.5 bg-indigo-50/40 px-2.5 py-1.5 rounded-xl border border-indigo-100/50">
+                                    <i class="fa-solid fa-graduation-cap text-indigo-500 text-xs"></i> ${subject.specialty}
+                                </p>
+                            </div>
+
+                            <div class="text-[11px]">
+                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Requisits del mòdul o de l'equip</span>
+                                <ul class="space-y-1">
+                                    ${benefitsList}
+                                </ul>
+                            </div>
+                            
+                            <div class="mt-auto pt-2 flex items-center gap-1">
+                                ${statusLabel}
+                            </div>
+                        </div>
+
+                        <div class="p-5 pt-0 mt-auto">
+                            <button onclick="toggleSelectSubject('${subject.id}')" ${isAssigned ? 'disabled' : ''} class="w-full py-2.5 px-4 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 ${actionBtnClass}">
+                                ${actionBtnText}
+                            </button>
+                        </div>
+
+                        ${adminControls}
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHTML);
+            });
+            
+            if (grid.innerHTML === '') {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 px-4 border border-dashed border-slate-200 rounded-3xl bg-white text-slate-400">
+                        <i class="fa-solid fa-filter text-2xl mb-2 text-slate-300"></i>
+                        <p class="text-xs font-bold text-slate-500">No s'ha trobat cap mòdul que coincideixi amb els filtres.</p>
+                        <button onclick="resetFilters()" class="mt-3 px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-lg transition-colors">Netejar filtres</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Funció per duplicar de manera fàcil i ràpida qualsevol element o matèria existent
+        async function duplicateSubject(id) {
+            const subject = database.find(item => item.id === id);
+            if (!subject) return;
+
+            const duplicated = JSON.parse(JSON.stringify(subject));
+            duplicated.id = subject.study + '_' + Date.now().toString();
+            duplicated.group = subject.group + ' (Còpia)';
+            duplicated.assignedTeacher = ''; // El duplicat surt inicialment disponible
+
+            if (isFirebaseInitialized) {
+                try {
+                    const subjectDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'subjects', duplicated.id);
+                    await setDoc(subjectDocRef, duplicated);
+                } catch (error) {
+                    console.error("Error duplicant el mòdul a Firebase:", error);
+                }
+            } else {
+                database.push(duplicated);
+                saveSubjectsLocally(); // <-- Desa el nou element duplicat de forma permanent al navegador!
+                renderSubjectCards();
+                updateSelectionDashboard();
+                renderProposalsTable();
+            }
+        }
+
+        // Funció per actualitzar directament el docent des de la graella XLS
+        async function updateSubjectTeacher(id, teacherName) {
+            const index = database.findIndex(item => item.id === id);
+            if (index === -1) return;
+            
+            database[index].assignedTeacher = teacherName.trim();
+            
+            if (isFirebaseInitialized) {
+                try {
+                    const subjectDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'subjects', id);
+                    await setDoc(subjectDocRef, database[index], { merge: true });
+                } catch (error) {
+                    console.error("Error actualitzant l'assignació directa a Firebase:", error);
+                }
+            } else {
+                saveSubjectsLocally();
+                renderSubjectCards();
+                updateSelectionDashboard();
+                renderProposalsTable();
+            }
+        }
+
+        function setFilterStudy(study) {
+            activeFilterStudy = study;
+            
+            const coorSub = document.getElementById('coor-subfilters');
+            if (study === 'coor') {
+                if (coorSub) {
+                    coorSub.classList.remove('hidden');
+                    coorSub.classList.add('flex');
+                }
+            } else {
+                if (coorSub) {
+                    coorSub.classList.add('hidden');
+                    coorSub.classList.remove('flex');
+                }
+            }
+
+            document.querySelectorAll('.filter-study-btn').forEach(btn => {
+                btn.className = "filter-study-btn p-3 rounded-2xl border text-left bg-white border-slate-200 hover:border-indigo-300 text-slate-700 transition-all duration-200 flex flex-col justify-between h-20";
+                const icon = btn.querySelector('i');
+                if (icon) {
+                    icon.className = icon.className.replace('text-white', '');
+                    if (btn.id === 'filter-study-ac') icon.classList.add('text-indigo-500');
+                    if (btn.id === 'filter-study-mp') icon.classList.add('text-amber-500');
+                    if (btn.id === 'filter-study-ci') icon.classList.add('text-sky-500');
+                    if (btn.id === 'filter-study-tl') icon.classList.add('text-emerald-500');
+                    if (btn.id === 'filter-study-ga') icon.classList.add('text-cyan-500');
+                    if (btn.id === 'filter-study-af') icon.classList.add('text-fuchsia-500');
+                    if (btn.id === 'filter-study-coor') icon.classList.add('text-rose-500');
+                }
+            });
+            const clickedBtn = document.getElementById(`filter-study-${study}`);
+            if (clickedBtn) {
+                clickedBtn.className = "filter-study-btn p-3 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between h-20 bg-indigo-600 text-white border-indigo-600 shadow-md";
+                const icon = clickedBtn.querySelector('i');
+                if (icon) {
+                    icon.className = icon.className.replace(/text-(indigo|amber|sky|emerald|cyan|fuchsia|rose)-500/, '');
+                }
+            }
+            renderSubjectCards();
+        }
+
+        function setCoorSubFilter(type) {
+            activeCoorSubFilter = type;
+            document.querySelectorAll('.coor-sub-btn').forEach(btn => {
+                btn.className = "coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition-colors";
+            });
+            const activeBtn = document.getElementById(`coor-sub-${type}`);
+            if (activeBtn) {
+                activeBtn.className = "coor-sub-btn px-3.5 py-1.5 text-[10px] font-bold rounded-xl bg-indigo-600 text-white transition-colors shadow-xs";
+            }
+            renderSubjectCards();
+        }
+
+        function setFilterCourse(course) {
+            activeFilterCourse = course;
+            document.querySelectorAll('.filter-course-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('text-slate-600', 'hover:text-slate-800');
+            });
+            const clickedBtn = document.getElementById(`filter-course-${course}`);
+            if (clickedBtn) {
+                clickedBtn.classList.remove('text-slate-600', 'hover:text-slate-800');
+                clickedBtn.classList.add('bg-indigo-600', 'text-white');
+            }
+            renderSubjectCards();
+        }
+
+        function setFilterHours(type) {
+            activeFilterHours = type;
+            document.querySelectorAll('.filter-hours-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            const clickedBtn = document.getElementById(`filter-hours-${type}`);
+            if (clickedBtn) {
+                clickedBtn.classList.remove('bg-slate-100', 'text-slate-600');
+                clickedBtn.classList.add('bg-indigo-600', 'text-white');
+            }
+            renderSubjectCards();
+        }
+
+        function setFilterStatus(type) {
+            activeFilterStatus = type;
+            document.querySelectorAll('.filter-status-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            const clickedBtn = document.getElementById(`filter-status-${type}`);
+            if (clickedBtn) {
+                clickedBtn.classList.remove('bg-slate-100', 'text-slate-600');
+                clickedBtn.classList.add('bg-slate-900', 'text-white');
+            }
+            renderSubjectCards();
+        }
+
+        function filterDatabase() {
+            renderSubjectCards();
+        }
+
+        function resetFilters() {
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.value = '';
+            setFilterHours('all');
+            setFilterStatus('all');
+            setFilterCourse('all');
+            setFilterStudy('all');
+            setCoorSubFilter('all');
+        }
+
+        function toggleSelectSubject(id) {
+            const subject = database.find(item => item.id === id);
+            if (subject && subject.assignedTeacher && subject.assignedTeacher.trim() !== '') return;
+
+            const index = selectedSubjects.indexOf(id);
+            if (index === -1) {
+                selectedSubjects.push(id);
+            } else {
+                selectedSubjects.splice(index, 1);
+            }
+            renderSubjectCards();
+            updateSelectionDashboard();
+        }
+
+        // Funció ràpida per esborrar tota la tria acumulada del docent amb un sol clic
+        function clearTria() {
+            if (selectedSubjects.length === 0) return;
+            showCustomConfirm(
+                "Netejar tria",
+                "Estàs segur que vols esborrar tots els mòduls o coordinacions que tens marcats actualment de la teva tria?",
+                () => {
+                    selectedSubjects = [];
+                    renderSubjectCards();
+                    updateSelectionDashboard();
+                }
+            );
+        }
+
+        // Permet canviar el codi de seguretat del mode coordinador directament des de la interfície
+        function changePasscode() {
+            const inputVal = document.getElementById('coor-passcode-change').value.trim();
+            if (!inputVal) {
+                showCustomConfirm("Codi incomplet", "Si us plau, escriu un codi d'accés vàlid per poder fer el canvi.", () => {});
+                return;
+            }
+            
+            coordinationPasscode = inputVal;
+            localStorage.setItem('mimo_coordination_passcode', inputVal);
+            document.getElementById('coor-passcode-change').value = '';
+            
+            showCustomConfirm(
+                "Clau Canviada amb èxit",
+                `La clau d'accés s'ha actualitzat correctament. Recorda fer servir "${inputVal}" la propera vegada que vulguis entrar al panell de coordinació. No la perdis!`,
+                () => {}
+            );
+        }
+
+        function updateSelectionDashboard() {
+            const listContainer = document.getElementById('selected-list');
+            const emptyMsg = document.getElementById('empty-selection-msg');
+            const countBadge = document.getElementById('selected-count-badge');
+            const totalHoursEl = document.getElementById('total-hours');
+            const progressBar = document.getElementById('progress-bar');
+            const statusText = document.getElementById('hours-status-text');
+            const submitBtn = document.getElementById('btn-submit');
+            
+            if (!listContainer) return;
+            const currentRows = listContainer.querySelectorAll('.selected-item-row');
+            currentRows.forEach(el => el.remove());
+            
+            let hoursSum = 0;
+            
+            if (selectedSubjects.length === 0) {
+                if (emptyMsg) emptyMsg.classList.remove('hidden');
+                if (countBadge) countBadge.innerText = '0 mòduls';
+            } else {
+                if (emptyMsg) emptyMsg.classList.add('hidden');
+                if (countBadge) countBadge.innerText = `${selectedSubjects.length} mòdul${selectedSubjects.length > 1 ? 's' : ''}`;
+                
+                selectedSubjects.forEach(id => {
+                    const data = database.find(item => item.id === id);
+                    if (!data) return; 
+                    
+                    hoursSum += data.hours;
+                    
+                    const row = document.createElement('div');
+                    row.className = 'selected-item-row bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center justify-between gap-3 shadow-xs animate-fadeIn';
+                    row.innerHTML = `
+                        <div class="min-w-0 flex-grow">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase">${data.cycle} (Codi ${data.code})</span>
+                            <h4 class="text-[11px] font-extrabold text-slate-800 truncate">${data.name}</h4>
+                            <p class="text-[9px] text-slate-500 font-bold">${data.group}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] font-extrabold text-indigo-700 bg-indigo-50 border border-indigo-100/50 px-2 py-0.5 rounded-lg">${data.hours}h</span>
+                            <button onclick="toggleSelectSubject('${id}')" class="text-slate-400 hover:text-rose-600 transition-colors">
+                                <i class="fa-regular fa-circle-xmark text-sm"></i>
+                            </button>
+                        </div>
+                    `;
+                    listContainer.appendChild(row);
+                });
+            }
+            
+            if (totalHoursEl) totalHoursEl.innerHTML = `${hoursSum}h <span class="text-xs text-slate-400 font-medium">/ 18h requerides</span>`;
+            const percent = Math.min((hoursSum / 18) * 100, 100);
+            if (progressBar) progressBar.style.width = `${percent}%`;
+            
+            if (hoursSum === 0) {
+                if (statusText) {
+                    statusText.innerText = 'No has seleccionat cap element encara.';
+                    statusText.className = 'text-[10px] font-bold text-slate-400';
+                }
+                if (progressBar) progressBar.className = 'bg-slate-200 h-full';
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.className = 'w-full py-3.5 px-4 rounded-2xl font-bold text-xs bg-slate-200 text-slate-400 cursor-not-allowed transition-all flex items-center justify-center gap-2';
+                }
+            } else if (hoursSum < 18) {
+                if (statusText) {
+                    statusText.innerText = 'Menys de 18h. Pots enviar la proposta si tens reducció d\'horari.';
+                    statusText.className = 'text-[10px] font-bold text-amber-600';
+                }
+                if (progressBar) progressBar.className = 'bg-amber-500 h-full rounded-full transition-all duration-500';
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.className = 'w-full py-3.5 px-4 rounded-2xl font-bold text-xs bg-indigo-600 hover:bg-indigo-700 text-white shadow-md cursor-pointer transition-all flex items-center justify-center gap-2';
+                }
+            } else if (hoursSum === 18) {
+                if (statusText) {
+                    statusText.innerText = 'Jornada òptima de 18h completa!';
+                    statusText.className = 'text-[10px] font-bold text-emerald-600';
+                }
+                if (progressBar) progressBar.className = 'bg-emerald-500 h-full rounded-full transition-all duration-500';
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.className = 'w-full py-3.5 px-4 rounded-2xl font-bold text-xs bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 cursor-pointer transition-all flex items-center justify-center gap-2';
+                }
+            } else {
+                if (statusText) {
+                    statusText.innerText = 'Has superat les 18 hores de referència. Pots enviar-la de totes maneres.';
+                    statusText.className = 'text-[10px] font-bold text-rose-600';
+                }
+                if (progressBar) progressBar.className = 'bg-rose-500 h-full rounded-full transition-all duration-500';
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.className = 'w-full py-3.5 px-4 rounded-2xl font-bold text-xs bg-indigo-600 hover:bg-indigo-700 text-white shadow-md cursor-pointer transition-all flex items-center justify-center gap-2';
+                }
+            }
+        }
+
+        // Gestor de d'obertura del mode coordinació amb verificació de seguretat
+        function handleEditModeClick() {
+            if (isEditMode) {
+                isEditMode = false;
+                applyEditModeState();
+            } else {
+                const modal = document.getElementById('passcode-modal');
+                const input = document.getElementById('passcode-input');
+                const err = document.getElementById('passcode-error');
+                
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                    }
+                    if (err) err.classList.add('hidden');
+                }
+            }
+        }
+
+        function closePasscodeModal() {
+            const modal = document.getElementById('passcode-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function submitPasscode() {
+            const input = document.getElementById('passcode-input').value;
+            const err = document.getElementById('passcode-error');
+            
+            if (input === coordinationPasscode) {
+                closePasscodeModal();
+                isEditMode = true;
+                applyEditModeState();
+            } else {
+                if (err) err.classList.remove('hidden');
+            }
+        }
+
+        function applyEditModeState() {
+            const toggleBtn = document.getElementById('edit-mode-toggle');
+            const toggleText = document.getElementById('edit-toggle-text');
+            const adminBanner = document.getElementById('admin-banner');
+            const infoBanner = document.getElementById('info-banner');
+            const proposalsSection = document.getElementById('admin-proposals-section');
+
+            if (isEditMode) {
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+                    toggleBtn.classList.add('bg-amber-600', 'text-white', 'border-amber-600');
+                }
+                if (toggleText) toggleText.innerText = "Sortir del Mode Coordinador";
+                if (adminBanner) {
+                    adminBanner.classList.remove('hidden');
+                    adminBanner.classList.add('flex');
+                }
+                if (infoBanner) infoBanner.classList.add('hidden');
+                if (proposalsSection) proposalsSection.classList.remove('hidden');
+            } else {
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('bg-amber-600', 'text-white', 'border-amber-600');
+                    toggleBtn.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+                }
+                if (toggleText) toggleText.innerText = "Mode Coordinació";
+                if (adminBanner) {
+                    adminBanner.classList.add('hidden');
+                    adminBanner.classList.remove('flex');
+                }
+                if (infoBanner) infoBanner.classList.remove('hidden');
+                if (proposalsSection) proposalsSection.classList.add('hidden');
+            }
+            renderSubjectCards();
+        }
+
+        function toggleEditMode() {
+            handleEditModeClick();
+        }
+
+        function toggleFormDeptContainer() {
+            const studyField = document.getElementById('form-study-field');
+            const deptContainer = document.getElementById('form-dept-container');
+            if (studyField && deptContainer) {
+                if (studyField.value === 'coor') {
+                    deptContainer.classList.remove('hidden');
+                } else {
+                    deptContainer.classList.add('hidden');
+                }
+            }
+        }
+
+        function openAddModal() {
+            const modalTitle = document.getElementById('modal-title');
+            const formId = document.getElementById('form-subject-id');
+            const form = document.getElementById('subject-form');
+            if (modalTitle) modalTitle.innerText = 'Crear Globus de matèria';
+            if (formId) formId.value = '';
+            if (form) form.reset();
+            toggleFormDeptContainer();
+            const editModal = document.getElementById('edit-modal');
+            if (editModal) editModal.classList.remove('hidden');
+        }
+
+        function openEditModal(id) {
+            const subject = database.find(item => item.id === id);
+            if (!subject) return;
+
+            const modalTitle = document.getElementById('modal-title');
+            if (modalTitle) modalTitle.innerText = 'Editar Globus';
+            
+            const formId = document.getElementById('form-subject-id');
+            const formCode = document.getElementById('form-code');
+            const formName = document.getElementById('form-name');
+            const formHours = document.getElementById('form-hours');
+            const formStudyVal = document.getElementById('form-study-field');
+            const formCourseVal = document.getElementById('form-course-field');
+            const formSpec = document.getElementById('form-specialty');
+            const formGroup = document.getElementById('form-group');
+            const formSchedule = document.getElementById('form-schedule');
+            const formTeacher = document.getElementById('form-teacher');
+            const formBenefits = document.getElementById('form-benefits');
+            const formDept = document.getElementById('form-dept');
+
+            if (formId) formId.value = subject.id;
+            if (formCode) formCode.value = subject.code;
+            if (formName) formName.value = subject.name;
+            if (formHours) formHours.value = subject.hours;
+            if (formStudyVal) formStudyVal.value = subject.study;
+            if (formCourseVal) formCourseVal.value = subject.course || 1;
+            if (formSpec) formSpec.value = subject.specialty;
+            if (formGroup) formGroup.value = subject.group;
+            if (formSchedule) formSchedule.value = subject.schedule;
+            if (formTeacher) formTeacher.value = subject.assignedTeacher || '';
+            if (formBenefits) formBenefits.value = subject.benefits ? subject.benefits.join('\n') : '';
+            if (formDept && subject.dept) formDept.value = subject.dept;
+
+            toggleFormDeptContainer();
+
+            const editModal = document.getElementById('edit-modal');
+            if (editModal) editModal.classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            const editModal = document.getElementById('edit-modal');
+            if (editModal) editModal.classList.add('hidden');
+        }
+
+        async function saveSubject(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-subject-id').value;
+            const code = document.getElementById('form-code').value;
+            const name = document.getElementById('form-name').value;
+            const hours = parseInt(document.getElementById('form-hours').value);
+            const study = document.getElementById('form-study-field').value;
+            const course = parseInt(document.getElementById('form-course-field').value);
+            const specialty = document.getElementById('form-specialty').value;
+            const group = document.getElementById('form-group').value;
+            const schedule = document.getElementById('form-schedule').value;
+            const teacher = document.getElementById('form-teacher').value.trim();
+            const benefitsText = document.getElementById('form-benefits').value;
+            const benefits = benefitsText.split('\n').map(b => b.trim()).filter(b => b !== '');
+            const dept = (study === 'coor') ? document.getElementById('form-dept').value : '';
+
+            let studyNameMap = {
+                ac: 'CFGM Activitats Comercials',
+                mp: 'CFGS Màrqueting i Publicitat',
+                ci: 'CFGS Comerç Internacional',
+                tl: 'CFGS Transport i Logística',
+                ga: 'CFGM Gestió Administrativa',
+                af: 'CFGS Administració i Finances',
+                coor: 'Coordinacions i Càrrecs'
+            };
+            const cycle = studyNameMap[study] || '';
+
+            const targetId = id ? id : study + '_' + Date.now().toString();
+            const subjectPayload = {
+                id: targetId,
+                code, name, hours, course, study, cycle, specialty, group, schedule,
+                assignedTeacher: teacher,
+                benefits,
+                status: 'available',
+                dept
+            };
+
+            if (isFirebaseInitialized) {
+                try {
+                    const subjectDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'subjects', targetId);
+                    await setDoc(subjectDocRef, subjectPayload, { merge: true });
+                } catch (error) {
+                    console.error("Error al núvol:", error);
+                }
+            } else {
+                if (id) {
+                    const index = database.findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        database[index] = subjectPayload;
+                    }
+                } else {
+                    database.push(subjectPayload);
+                }
+                saveSubjectsLocally(); // <-- Guarda permanentment els canvis manuals fets pel coordinador localment!
+                renderSubjectCards();
+                updateSelectionDashboard();
+                renderProposalsTable();
+            }
+
+            closeEditModal();
+        }
+
+        function deleteSubject(id) {
+            showCustomConfirm(
+                "Eliminar Globus", 
+                "Segur que vols eliminar permanentment aquesta matèria/grup de la planificació?",
+                async () => {
+                    if (isFirebaseInitialized) {
+                        try {
+                            const subjectDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'subjects', id);
+                            await deleteDoc(subjectDocRef);
+                        } catch (error) {
+                            console.error("Error al Firebase:", error);
+                        }
+                    } else {
+                        database = database.filter(item => item.id !== id);
+                        selectedSubjects = selectedSubjects.filter(sid => sid !== id);
+                        saveSubjectsLocally(); // <-- Guarda permanentment l'eliminació!
+                        renderSubjectCards();
+                        updateSelectionDashboard();
+                        renderProposalsTable();
+                    }
+                }
+            );
+        }
+
+        async function submitPreferences() {
+            if (selectedSubjects.length === 0) return;
+            
+            const teacherName = document.getElementById('user-display-name').innerText;
+            const teacherSpec = document.getElementById('user-display-spec').innerText;
+            
+            let totalHours = 0;
+            const subjectsNamesArray = [];
+            const subjectsCodesArray = [];
+            const subjectsIdsArray = [];
+
+            selectedSubjects.forEach(id => {
+                const data = database.find(item => item.id === id);
+                if (data) {
+                    totalHours += data.hours;
+                    subjectsNamesArray.push(data.name);
+                    subjectsCodesArray.push(data.code);
+                    subjectsIdsArray.push(data.id);
+                }
+            });
+
+            const proposalData = {
+                teacherName: teacherName,
+                teacherSpec: teacherSpec,
+                selectedSubjectIds: subjectsIdsArray,
+                selectedSubjectCodes: subjectsCodesArray,
+                selectedSubjectNames: subjectsNamesArray,
+                totalHours: totalHours,
+                timestamp: Date.now()
+            };
+
+            const webhookUrl = document.getElementById('sheets-webhook-url').value.trim();
+            if (webhookUrl) {
+                try {
+                    fetch(webhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors', 
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(proposalData)
+                    });
+                } catch (webhookErr) {
+                    console.warn("No s'ha pogut transmetre automàticament a Google Drive:", webhookErr);
+                }
+            }
+
+            if (isFirebaseInitialized) {
+                try {
+                    const proposalsCol = collection(db, 'artifacts', appId, 'public', 'data', 'proposals');
+                    await addDoc(proposalsCol, proposalData);
+                    
+                    const successModal = document.getElementById('success-modal');
+                    if (successModal) successModal.classList.remove('hidden');
+                } catch (error) {
+                    console.error("Error enviant proposta:", error);
+                }
+            } else {
+                const newProposal = {
+                    id: 'local_' + Date.now(),
+                    teacherName: teacherName,
+                    teacherSpec: teacherSpec,
+                    selectedSubjectIds: [...selectedSubjects],
+                    totalHours: totalHours,
+                    timestamp: Date.now()
+                };
+
+                proposals.push(newProposal);
+                saveProposalsLocally(); // <-- Guarda de manera permanent la proposta del professor en local!
+                
+                renderProposalsList();
+                renderProposalsTable();
+
+                const successModal = document.getElementById('success-modal');
+                if (successModal) successModal.classList.remove('hidden');
+            }
+        }
+
+        function closeSuccessModal() {
+            const successModal = document.getElementById('success-modal');
+            if (successModal) successModal.classList.add('hidden');
+            selectedSubjects = [];
+            renderSubjectCards();
+            updateSelectionDashboard();
+        }
+
+        // IDENTITAT DEL DOCENT (S'EMMAGATZEMA A LOCALSTORAGE)
+        function loadSavedIdentity() {
+            const savedName = localStorage.getItem('eduassigna_teacher_name');
+            const savedSpec = localStorage.getItem('eduassigna_teacher_spec');
+            
+            if (savedName && savedSpec) {
+                updateUIIdentity(savedName, savedSpec);
+            } else {
+                setTimeout(() => {
+                    openIdentityModal();
+                }, 800);
+            }
+        }
+
+        function openIdentityModal() {
+            const savedName = localStorage.getItem('eduassigna_teacher_name');
+            const savedSpec = localStorage.getItem('eduassigna_teacher_spec');
+            
+            const identName = document.getElementById('ident-name');
+            const identSpec = document.getElementById('ident-spec');
+            
+            if (identName && savedName) identName.value = savedName;
+            if (identSpec && savedSpec) identSpec.value = savedSpec;
+            
+            const identityModal = document.getElementById('identity-modal');
+            if (identityModal) identityModal.classList.remove('hidden');
+        }
+
+        function closeIdentityModal() {
+            const identityModal = document.getElementById('identity-modal');
+            if (identityModal) identityModal.classList.add('hidden');
+        }
+
+        function saveIdentity() {
+            const name = document.getElementById('ident-name').value.trim();
+            const spec = document.getElementById('ident-spec').value.trim();
+            
+            if (!name || !spec) {
+                showCustomConfirm("Dades incompletes", "Si us plau, omple tots els camps per continuar amb el procés.", () => {});
+                return;
+            }
+            
+            localStorage.setItem('eduassigna_teacher_name', name);
+            localStorage.setItem('eduassigna_teacher_spec', spec);
+            
+            updateUIIdentity(name, spec);
+            closeIdentityModal();
+        }
+
+        function updateUIIdentity(name, spec) {
+            const userDisplayName = document.getElementById('user-display-name');
+            const userDisplaySpec = document.getElementById('user-display-spec');
+            const userDisplayInitials = document.getElementById('user-display-initials');
+            
+            if (userDisplayName) userDisplayName.innerText = name;
+            if (userDisplaySpec) userDisplaySpec.innerText = spec;
+            
+            const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+            if (userDisplayInitials) userDisplayInitials.innerText = initials;
+        }
+
+        function setViewType(viewType) {
+            currentViewType = viewType;
+            
+            const btnCards = document.getElementById('btn-view-cards');
+            const btnTable = document.getElementById('btn-view-table');
+            
+            const cardsContainer = document.getElementById('proposals-cards-container');
+            const tableContainer = document.getElementById('proposals-table-container');
+            
+            if (viewType === 'cards') {
+                if (btnCards) {
+                    btnCards.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white transition-all";
+                }
+                if (btnTable) {
+                    btnTable.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-800 transition-all";
+                }
+                if (cardsContainer) cardsContainer.classList.remove('hidden');
+                if (tableContainer) tableContainer.classList.add('hidden');
+            } else {
+                if (btnCards) {
+                    btnCards.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-600 hover:text-slate-800 transition-all";
+                }
+                if (btnTable) {
+                    btnTable.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white transition-all";
+                }
+                if (cardsContainer) cardsContainer.classList.add('hidden');
+                if (tableContainer) tableContainer.classList.remove('hidden');
+                
+                renderProposalsTable();
+            }
+        }
+
+        function renderProposalsList() {
+            const container = document.getElementById('proposals-cards-container');
+            const badge = document.getElementById('proposal-count-badge');
+            
+            if (!container) return;
+            container.innerHTML = '';
+            
+            if (badge) badge.innerText = `${proposals.length} proposta${proposals.length !== 1 ? 'es' : ''}`;
+            
+            if (proposals.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400 text-xs font-semibold bg-slate-50 border border-dashed border-slate-200 rounded-3xl">
+                        <i class="fa-solid fa-folder-open text-3xl mb-3 text-slate-300 block"></i>
+                        Encara no s'ha rebut cap proposta de cap docent.
+                    </div>
+                `;
+                return;
+            }
+            
+            proposals.forEach(p => {
+                const subjectNames = p.selectedSubjectIds.map(id => {
+                    const s = database.find(item => item.id === id);
+                    return s ? `${s.code} (${s.hours}h)` : `Mòdul`;
+                }).join(', ');
+                
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col gap-2 relative shadow-xs animate-fadeIn';
+                card.innerHTML = `
+                    <button onclick="deleteProposal('${p.id}')" class="absolute top-3.5 right-3.5 text-slate-400 hover:text-rose-600 transition-colors" title="Eliminar proposta">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                    </button>
+                    <div>
+                        <h4 class="text-xs font-extrabold text-slate-900">${p.teacherName}</h4>
+                        <p class="text-[10px] text-slate-500 font-bold">${p.teacherSpec}</p>
+                    </div>
+                    <div class="border-t border-dashed border-slate-200 pt-2 mt-1">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Matèries demanades:</span>
+                        <p class="text-[11px] text-slate-700 font-semibold leading-relaxed">${subjectNames || 'Cap'}</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-auto pt-2 border-t border-slate-100">
+                        <span class="text-[10px] text-slate-400 font-bold">${new Date(p.timestamp).toLocaleString('ca-ES', {hour: '2-digit', minute:'2-digit', day: '2-digit', month: '2-digit'})}</span>
+                        <span class="text-xs font-extrabold text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-lg border border-indigo-100">${p.totalHours}h totals</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderProposalsTable() {
+            const tableBody = document.getElementById('xls-table-body');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            
+            const matTeachersMap = {};
+            
+            proposals.forEach(prop => {
+                if (prop.selectedSubjectIds && Array.isArray(prop.selectedSubjectIds)) {
+                    prop.selectedSubjectIds.forEach(id => {
+                        if (!matTeachersMap[id]) {
+                            matTeachersMap[id] = [];
+                        }
+                        if (matTeachersMap[id].indexOf(prop.teacherName) === -1) {
+                            matTeachersMap[id].push(prop.teacherName);
+                        }
+                    });
+                }
+            });
+            
+            const sortedSubjects = [...database].sort((a, b) => {
+                if (a.cycle !== b.cycle) return a.cycle.localeCompare(b.cycle);
+                if (a.course !== b.course) return a.course - b.course;
+                return a.code.localeCompare(b.code);
+            });
+            
+            let rowCount = 0;
+            
+            sortedSubjects.forEach(subject => {
+                const choosingTeachers = matTeachersMap[subject.id] || [];
+                const isAssignedGlobally = (subject.assignedTeacher && subject.assignedTeacher.trim() !== '');
+                
+                let teachersHTML = '';
+                let textWeight = 'font-normal text-slate-500';
+                let rowBg = 'hover:bg-slate-50/60';
+                
+                if (isAssignedGlobally) {
+                    teachersHTML = `<span class="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded-lg"><i class="fa-solid fa-lock text-[8px]"></i> Assignat</span>`;
+                    textWeight = 'font-bold text-slate-900';
+                    rowBg = 'bg-rose-50/5 hover:bg-rose-50/15';
+                } else if (choosingTeachers.length > 0) {
+                    teachersHTML = choosingTeachers.map(t => `<span class="inline-flex items-center gap-1 font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-lg shadow-2xs">${t}</span>`).join(' ');
+                    textWeight = 'font-semibold text-slate-800';
+                    rowBg = 'bg-indigo-50/5 hover:bg-indigo-100/10';
+                } else {
+                    teachersHTML = `<span class="text-slate-400 italic">Lliure (Sense sol·licituds)</span>`;
+                }
+                
+                const tr = document.createElement('tr');
+                tr.className = `${rowBg} transition-colors`;
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-slate-100 font-medium text-slate-600 max-w-[200px] truncate" title="${subject.cycle}">${subject.cycle}</td>
+                    <td class="p-3 border-r border-slate-100 text-center font-bold text-slate-700">${subject.group}</td>
+                    <td class="p-3 border-r border-slate-100 text-center font-extrabold text-indigo-600 bg-slate-50/20">${subject.code}</td>
+                    <td class="p-3 border-r border-slate-100 ${textWeight} max-w-[250px] truncate" title="${subject.name}">${subject.name}</td>
+                    <td class="p-3 border-r border-slate-100 text-center font-extrabold text-slate-800">${subject.hours}h</td>
+                    <td class="p-3 border-r border-slate-100 max-w-[200px] flex items-center gap-1 flex-wrap">${teachersHTML}</td>
+                    <td class="p-2 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <input type="text" 
+                                   value="${subject.assignedTeacher || ''}" 
+                                   onchange="updateSubjectTeacher('${subject.id}', this.value)" 
+                                   placeholder="Assigna un docent..." 
+                                   class="px-2.5 py-1 text-xs border border-slate-200 rounded-lg w-36 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-bold text-slate-800 text-center bg-white shadow-3xs"
+                            >
+                            ${subject.assignedTeacher ? `
+                                <button onclick="updateSubjectTeacher('${subject.id}', '')" class="text-rose-500 hover:text-rose-700 p-0.5" title="Alliberar matèria">
+                                    <i class="fa-solid fa-circle-xmark text-sm"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+                rowCount++;
+            });
+            
+            if (rowCount === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="p-8 text-center text-slate-400 italic">No hi ha "globus" de matèries actius a la base de dades per llistar.</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function copyTableToClipboard() {
+            let clipboardText = "Cicle Formatiu\tGrup / Curs\tCodi Mòdul\tNom de la Matèria o Càrrec\tHores\tDocents Assignats / Sol·licitants\n";
+            
+            const matTeachersMap = {};
+            proposals.forEach(prop => {
+                if (prop.selectedSubjectIds) {
+                    prop.selectedSubjectIds.forEach(id => {
+                        if (!matTeachersMap[id]) matTeachersMap[id] = [];
+                        if (matTeachersMap[id].indexOf(prop.teacherName) === -1) {
+                            matTeachersMap[id].push(prop.teacherName);
+                        }
+                    });
+                }
+            });
+            
+            const sortedSubjects = [...database].sort((a, b) => {
+                if (a.cycle !== b.cycle) return a.cycle.localeCompare(b.cycle);
+                if (a.course !== b.course) return a.course - b.course;
+                return a.code.localeCompare(b.code);
+            });
+            
+            sortedSubjects.forEach(subject => {
+                const choosingTeachers = matTeachersMap[subject.id] || [];
+                const isAssigned = (subject.assignedTeacher && subject.assignedTeacher.trim() !== '');
+                
+                let assignedText = '';
+                if (isAssigned) {
+                    assignedText = `ASSIGNAT: ${subject.assignedTeacher}`;
+                } else if (choosingTeachers.length > 0) {
+                    assignedText = choosingTeachers.join(', ');
+                } else {
+                    assignedText = 'Lliure';
+                }
+                
+                clipboardText += `${subject.cycle}\t${subject.group}\t${subject.code}\t${subject.name}\t${subject.hours}\t${assignedText}\n`;
+            });
+            
+            const tempTextArea = document.createElement("textarea");
+            tempTextArea.value = clipboardText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCustomConfirm("Còpia de dades realitzada!", "S'ha copiat toda la graella estil Excel al teu porta-retalls de l'ordinador. Ara ja pots anar al teu full de càlcul de Google Drive o Microsoft Excel i fer Ctrl+V per enganxar-lo directe!", () => {});
+                } else {
+                    console.error("No s'ha pogut copiar correctament.");
+                }
+            } catch (err) {
+                console.error("Error al copiar al porta-retalls:", err);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        function deleteProposal(id) {
+            showCustomConfirm(
+                "Eliminar proposta", 
+                "Estàs segur que vols eliminar permanentment aquesta sol·licitud?",
+                async () => {
+                    if (isFirebaseInitialized && !id.startsWith('local_')) {
+                        try {
+                            const proposalDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'proposals', id);
+                            await deleteDoc(proposalDocRef);
+                        } catch (error) {
+                            console.error("Error al Firebase:", error);
+                        }
+                    } else {
+                        proposals = proposals.filter(p => p.id !== id);
+                        saveProposalsLocally(); // <-- Desa el canvi de propostes localment!
+                        renderProposalsList();
+                        renderProposalsTable();
+                    }
+                }
+            );
+        }
+
+        function exportToCSV() {
+            if (proposals.length === 0) {
+                showCustomConfirm("Sense dades", "Encara no hi ha cap proposta de docent enviada per poder exportar. Sisplau, crea'n una primer fent una tria de hores i prement 'Envia la meva proposta'.", () => {});
+                return;
+            }
+            
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; 
+            csvContent += "Data,Docent,Especialitat,Hores Sol·licitades,Mòduls Demanats\n";
+            
+            proposals.forEach(p => {
+                const dateString = new Date(p.timestamp).toLocaleString('ca-ES');
+                const subjectNames = p.selectedSubjectIds.map(id => {
+                    const s = database.find(item => item.id === id);
+                    return s ? `${s.code} - ${s.name}` : `Mòdul`;
+                }).join(' / ');
+                
+                const escapedName = p.teacherName.replace(/"/g, '""');
+                const escapedSpec = p.teacherSpec.replace(/"/g, '""');
+                const escapedSubjects = subjectNames.replace(/"/g, '""');
+                
+                csvContent += `"${dateString}","${escapedName}","${escapedSpec}",${p.totalHours},"${escapedSubjects}"\n`;
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Tries_Docents_Mimo_${new Date().toLocaleDateString('ca-ES')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function saveSheetsWebhook() {
+            const urlVal = document.getElementById('sheets-webhook-url').value.trim();
+            localStorage.setItem('mimo_sheets_webhook_url', urlVal);
+        }
+
+        function loadSheetsWebhook() {
+            const savedUrl = localStorage.getItem('mimo_sheets_webhook_url');
+            const inputEl = document.getElementById('sheets-webhook-url');
+            if (inputEl && savedUrl) {
+                inputEl.value = savedUrl;
+            }
+        }
+
+        function openSheetsGuide() {
+            const modal = document.getElementById('sheets-guide-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeSheetsGuide() {
+            const modal = document.getElementById('sheets-guide-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            const confirmTitle = document.getElementById('confirm-title');
+            const confirmMsg = document.getElementById('confirm-message');
+            
+            if (confirmTitle) confirmTitle.innerText = title;
+            if (confirmMsg) confirmMsg.innerText = message;
+            
+            const confirmModal = document.getElementById('confirm-modal');
+            if (confirmModal) confirmModal.classList.remove('hidden');
+            
+            confirmCallback = onConfirm;
+        }
+
+        function closeConfirmModal() {
+            const confirmModal = document.getElementById('confirm-modal');
+            if (confirmModal) confirmModal.classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        const confirmOkBtn = document.getElementById('confirm-ok-btn');
+        if (confirmOkBtn) {
+            confirmOkBtn.onclick = function() {
+                if (confirmCallback) confirmCallback();
+                closeConfirmModal();
+            }
+        }
+
+        const passcodeInp = document.getElementById('passcode-input');
+        if (passcodeInp) {
+            passcodeInp.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    submitPasscode();
+                }
+            });
+        }
+
+        window.handleEditModeClick = handleEditModeClick;
+        window.closePasscodeModal = closePasscodeModal;
+        window.submitPasscode = submitPasscode;
+        window.toggleEditMode = toggleEditMode;
+        window.openAddModal = openAddModal;
+        window.filterDatabase = filterDatabase;
+        window.setFilterHours = setFilterHours;
+        window.setFilterStatus = setFilterStatus;
+        window.setFilterCourse = setFilterCourse;
+        window.setFilterStudy = setFilterStudy;
+        window.setCoorSubFilter = setCoorSubFilter;
+        window.toggleSelectSubject = toggleSelectSubject;
+        window.clearTria = clearTria;
+        window.changePasscode = changePasscode;
+        window.resetFilters = resetFilters;
+        window.openEditModal = openEditModal;
+        window.closeEditModal = closeEditModal;
+        window.saveSubject = saveSubject;
+        window.deleteSubject = deleteSubject;
+        window.duplicateSubject = duplicateSubject;
+        window.updateSubjectTeacher = updateSubjectTeacher; // <-- Exportat a l'entorn global
+        window.submitPreferences = submitPreferences;
+        window.closeSuccessModal = closeSuccessModal;
+        window.openIdentityModal = openIdentityModal;
+        window.closeIdentityModal = closeIdentityModal;
+        window.saveIdentity = saveIdentity;
+        window.closeConfirmModal = closeConfirmModal;
+        window.deleteProposal = deleteProposal;
+        window.forceSyncDefaultDatabase = forceSyncDefaultDatabase;
+        window.exportToCSV = exportToCSV;
+        window.saveSheetsWebhook = saveSheetsWebhook;
+        window.openSheetsGuide = openSheetsGuide;
+        window.closeSheetsGuide = closeSheetsGuide;
+        window.toggleFormDeptContainer = toggleFormDeptContainer;
+        window.setViewType = setViewType;
+        window.copyTableToClipboard = copyTableToClipboard;
+
+    </script>
+</body>
+</html>
